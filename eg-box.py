@@ -35,6 +35,7 @@ class Box(engine.GameObject):
 			if lost == False:
 				banner("Burnt!")
 				lost = True
+				engine.exit_engine()
 		elif self.y > (-1 * HEIGHT / 2 + basesize + speed) or speed < 0:
 			self.y -= speed
 			speed += 0.02
@@ -42,8 +43,12 @@ class Box(engine.GameObject):
 			if abs(speed) > 3:
 				banner("Crashed!")
 				lost = True
+			else:
+				banner("Landed!")
+				lost = True
 			self.y = -1 * HEIGHT / 2 + basesize
 			speed = 0
+			engine.exit_engine()
 		countreac += 1
 		if countreac > 20:
 			box.color = "black"
