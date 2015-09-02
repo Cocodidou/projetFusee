@@ -1,0 +1,84 @@
+#!/usr/bin/env python3
+# basic moving box
+
+import turtle
+import engine
+import random
+import math
+
+WIDTH = 640
+HEIGHT = 480
+speed = 0
+xspeed = 0
+
+class Box(engine.GameObject):
+	def __init__(self):
+		super().__init__(0, 0, 0, 0, 'fusee', 'red')
+	def move(self):
+		#self.x += 2
+		#self.y += 1
+		# with the following code we get the frantic move we expected
+		#self.x += random.randrange(-1,2)
+		#self.y += random.randrange(-1,2)
+		global speed
+		global xspeed
+		if self.y > (-230 + speed) or speed < 0:
+			self.y -= speed
+			speed += 0.1
+		else:
+			self.y = -230
+			speed = 0
+		#self.x += xspeed
+		#if xspeed != 0:
+			#xspeed = math.exp(-1 * abs(xspeed)) * xspeed / abs(xspeed)
+		
+
+def keyboard_cb(key):
+	global speed
+	global xspeed
+	if key == 'space':
+		speed -= 0.5
+	elif key == 'Escape':
+		print("Au revoir...")
+		engine.exit_engine()
+	elif key == 'Left':
+		xspeed -= 0.1
+	elif key == 'Right':
+		xspeed += 0.1
+	else:
+		print(key)
+
+def drawfus(): # spaceship!
+	B = 15
+	turtle.begin_poly()
+	turtle.fd(B)
+	turtle.rt(90)
+	turtle.fd(B)
+	turtle.rt(90)
+	turtle.fd(B)
+	turtle.rt(90)
+	turtle.fd(B)
+	turtle.fd(2.25 * B)
+	turtle.rt(90)
+	turtle.fd(B)
+	turtle.rt(90)
+	turtle.fd(B)
+	turtle.rt(90)
+	turtle.fd(B)
+	turtle.fd(3 * B)
+	turtle.rt(-90)
+	turtle.fd(1.25 * B)
+	
+	turtle.end_poly()
+	poly = turtle.get_poly() # c'est le poly... yveslemaire.poly
+	turtle.register_shape('fusee', poly)
+
+if __name__ == '__main__':
+	engine.init_screen(WIDTH, HEIGHT)
+	engine.init_engine()
+	engine.set_keyboard_handler(keyboard_cb)
+	drawfus()
+	box = Box()
+	engine.add_obj(box)
+	engine.engine()
+
