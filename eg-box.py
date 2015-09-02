@@ -26,14 +26,11 @@ class Box(engine.GameObject):
 			self.y -= speed
 			speed += 0.1
 		else:
-			if abs(speed) > 20:
-				print
 			self.y = -230
 			speed = 0
 		#self.x += xspeed
 		#if xspeed != 0:
 			#xspeed = math.exp(-1 * abs(xspeed)) * xspeed / abs(xspeed)
-		
 
 def keyboard_cb(key):
 	global speed
@@ -75,15 +72,17 @@ def drawfus(): # spaceship!
 	poly = turtle.get_poly() # c'est le poly... yveslemaire.poly
 	turtle.register_shape('fusee', poly)
 
+
 def drawsun():
-	turtle.begin_poly()
-	turtle.
+	turtle.setposition(0, 240)
+	turtle.dot(150, 'yellow')
 
 if __name__ == '__main__':
 	engine.init_screen(WIDTH, HEIGHT)
 	engine.init_engine()
 	engine.set_keyboard_handler(keyboard_cb)
 	drawfus()
+	drawsun()
 	box = Box()
 	engine.add_obj(box)
 	engine.engine()
