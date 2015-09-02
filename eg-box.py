@@ -32,8 +32,11 @@ class Box(engine.GameObject):
 				lost = True
 		elif self.y > (-230 + speed) or speed < 0:
 			self.y -= speed
-			speed += 0.05
+			speed += 0.02
 		else:
+			if abs(speed) > 3:
+				banner("Crashed!")
+				lost = True
 			self.y = -230
 			speed = 0
 		#self.x += xspeed
@@ -44,7 +47,8 @@ def keyboard_cb(key):
 	global speed
 	global xspeed
 	if key == 'space':
-		speed -= 0.5
+		if lost == False:
+			speed -= 0.2
 	elif key == 'Escape':
 		print("Au revoir...")
 		engine.exit_engine()
