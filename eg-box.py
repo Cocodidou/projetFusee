@@ -11,7 +11,6 @@ WIDTH = 640
 HEIGHT = 480
 speed = 0
 xspeed = 0
-lost = False
 countreac = 0
 basesize = 15
 sundiam = 150
@@ -32,29 +31,24 @@ class Box(engine.GameObject):
 		global countreac
 		if self.y >= HEIGHT / 2. - 3 * basesize - sundiam / 2:
 			speed = 0
-			if lost == False:
-				banner("Burnt!")
-				lost = True
-				engine.exit_engine()
+			banner("Burnt!")
+			lost = True
+			engine.exit_engine()
 		elif self.y > (-1 * HEIGHT / 2 + basesize + speed) or speed < 0:
 			self.y -= speed
 			speed += 0.02
 		else:
-			if abs(speed) > 3:
+			if abs(speed) > 2:
 				banner("Crashed!")
-				lost = True
 			else:
 				banner("Landed!")
-				lost = True
 			self.y = -1 * HEIGHT / 2 + basesize
 			speed = 0
 			engine.exit_engine()
 		countreac += 1
 		if countreac > 20:
 			box.color = "black"
-		#self.x += xspeed
-		#if xspeed != 0:
-			#xspeed = math.exp(-1 * abs(xspeed)) * xspeed / abs(xspeed)
+
 
 def keyboard_cb(key):
 	global speed
@@ -62,10 +56,9 @@ def keyboard_cb(key):
 	global box
 	global countreac
 	if key == 'space':
-		if lost == False:
-			speed -= 0.2
-			box.color = "red"
-			countreac = 0
+		speed -= 0.2
+		box.color = "red"
+		countreac = 0
 	elif key == 'Escape':
 		print("Au revoir...")
 		engine.exit_engine()
