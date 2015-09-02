@@ -5,11 +5,13 @@ import turtle
 import engine
 import random
 import math
+import time
 
 WIDTH = 640
 HEIGHT = 480
 speed = 0
 xspeed = 0
+lost = False
 
 class Box(engine.GameObject):
 	def __init__(self):
@@ -22,9 +24,15 @@ class Box(engine.GameObject):
 		#self.y += random.randrange(-1,2)
 		global speed
 		global xspeed
-		if self.y > (-230 + speed) or speed < 0:
+		global lost
+		if self.y >= 165:
+			speed = 0
+			if lost == False:
+				banner("Burnt!")
+				lost = True
+		elif self.y > (-230 + speed) or speed < 0:
 			self.y -= speed
-			speed += 0.1
+			speed += 0.05
 		else:
 			self.y = -230
 			speed = 0
@@ -71,6 +79,13 @@ def drawfus(): # spaceship!
 	turtle.end_poly()
 	poly = turtle.get_poly() # c'est le poly... yveslemaire.poly
 	turtle.register_shape('fusee', poly)
+
+def banner(s):
+	turtle.home()
+	turtle.color('black')
+	turtle.write(s, True, align='center', font=('Arial', 48, 'italic'))
+	time.sleep(3)
+	turtle.undo()
 
 
 def drawsun():
