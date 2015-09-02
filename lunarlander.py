@@ -15,6 +15,9 @@ basesize = 15
 sundiam = 150
 shiphead = 0 # tilt du vaisseau
 
+xspeed = 0
+yspeed = 0
+
 class Ground(engine.GameObject):
 	def __init__(self):
 		super().__init__(0, -HEIGHT/2, 0, 0, 'ground', 'black')
@@ -34,6 +37,7 @@ class Fusee(engine.GameObject):
 	def move(self):
 		global speed
 		global xspeed
+		global yspeed
 		global lost
 		global ship
 		global countreac
@@ -44,8 +48,13 @@ class Fusee(engine.GameObject):
 			engine.exit_engine()
 		elif self.y > (-1 * HEIGHT / 2 + basesize + speed + 20) or speed < 0: 
 			# le zéro de la fusée est au coin supérieur droit du réacteur gauche
-			self.y -= speed
-			speed += 0.02
+			# ceci est À CHANGER IMPÉRATIVEMENT mais je suis un gros feignant
+			self.y += yspeed
+			self.x += xspeed
+			
+			xspeed = 0.7 * xspeed # histoire qu'il ne file pas à l'infini
+			yspeed = yspeed - 0.02 # gravité
+			
 		else:
 			if abs(speed) > 2:
 				banner("Crashed!")
@@ -62,11 +71,14 @@ class Fusee(engine.GameObject):
 def keyboard_cb(key):
 	global speed
 	global xspeed
+	global yspeed
 	global ship
 	global countreac
 	global shiphead
 	if key == 'space' or key == 'Up':
-		speed -= 0.2
+		xspeed = xspeed + math.cos(shiphead) * 0.2
+		yspeed = yspeed + math.sin(shiphead) * 0.2
+		
 		ship.color = "red"
 		countreac = 0
 	elif key == 'Escape':
