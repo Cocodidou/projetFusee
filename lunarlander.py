@@ -56,7 +56,7 @@ class Fusee(engine.GameObject):
 			yspeed = 0.99 * yspeed - 0.02 # gravité
 			
 		else:
-			if abs(speed) > 2:
+			if abs(math.sqrt(xspeed ** 2 + yspeed ** 2)) > 2 or abs(shiphead) >= 15:
 				banner("Crashed!")
 			else:
 				banner("Landed!")
