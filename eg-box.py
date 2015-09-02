@@ -17,7 +17,9 @@ sundiam = 150
 
 class Ground(engine.GameObject):
 	def __init__(self):
-		super().__init__(0, 0, 0, 0, 'ground', 'black')
+		super().__init__(0, -HEIGHT/2, 0, 0, 'ground', 'black')
+	def heading(self):
+		return 90
 
 class Box(engine.GameObject):
 	def __init__(self):
@@ -38,7 +40,8 @@ class Box(engine.GameObject):
 			banner("Burnt!")
 			lost = True
 			engine.exit_engine()
-		elif self.y > (-1 * HEIGHT / 2 + basesize + speed) or speed < 0:
+		elif self.y > (-1 * HEIGHT / 2 + basesize + speed + 20) or speed < 0: 
+			# le zéro de la fusée est au coin supérieur droit du réacteur gauche
 			self.y -= speed
 			speed += 0.02
 		else:
