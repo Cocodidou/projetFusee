@@ -20,7 +20,7 @@ yspeed = 0
 
 class Ground(engine.GameObject):
 	def __init__(self):
-		super().__init__(0, -HEIGHT/2, 0, 0, 'ground', 'black')
+		super().__init__(0, -HEIGHT/2, 0, 0, 'ground', '#8B4513')
 	def heading(self):
 		return 90
 
@@ -95,6 +95,7 @@ def drawfus(): # spaceship!
 	global basesize
 	B = basesize
 	turtle.begin_poly()
+	#turtle.fd(-1.5 * B)
 	turtle.fd(B)
 	turtle.rt(90)
 	turtle.fd(B)
@@ -141,7 +142,7 @@ def drawground():
 		   (-40, 20), (0, 20), (40, 20), (80, 44),
 		(120, 28), (160, 66), (200, 29), (240, 64),
 		(280, 34), (320, 140), (320, 0), (-320,0) ) 
-	s.addcomponent(ground, "black", "black")
+	s.addcomponent(ground, "#8B4513", "#8B4513")
 	turtle.register_shape('ground', s)
 
 if __name__ == '__main__':
