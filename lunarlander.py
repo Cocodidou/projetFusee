@@ -84,9 +84,9 @@ def keyboard_cb(key):
 	elif key == 'Escape':
 		print("Au revoir...")
 		engine.exit_engine()
-	elif key == 'Left':
-		shiphead -= 2
 	elif key == 'Right':
+		shiphead -= 2
+	elif key == 'Left':
 		shiphead += 2
 	else:
 		print(key)
