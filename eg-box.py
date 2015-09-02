@@ -26,6 +26,8 @@ class Box(engine.GameObject):
 			self.y -= speed
 			speed += 0.1
 		else:
+			if abs(speed) > 20:
+				print
 			self.y = -230
 			speed = 0
 		#self.x += xspeed
@@ -72,6 +74,10 @@ def drawfus(): # spaceship!
 	turtle.end_poly()
 	poly = turtle.get_poly() # c'est le poly... yveslemaire.poly
 	turtle.register_shape('fusee', poly)
+
+def drawsun():
+	turtle.begin_poly()
+	turtle.
 
 if __name__ == '__main__':
 	engine.init_screen(WIDTH, HEIGHT)
