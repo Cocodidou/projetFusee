@@ -15,6 +15,10 @@ countreac = 0
 basesize = 15
 sundiam = 150
 
+class Ground(engine.GameObject):
+	def __init__(self):
+		super().__init__(0, 0, 0, 0, 'ground', 'black')
+
 class Box(engine.GameObject):
 	def __init__(self):
 		super().__init__(0, 0, 0, 0, 'fusee', 'black')
@@ -105,7 +109,7 @@ def banner(s):
 
 def drawsun():
 	global sundiam
-	turtle.setposition(0, 240)
+	turtle.setposition(0, HEIGHT / 2)
 	turtle.dot(sundiam, 'yellow')
 
 def drawground():
@@ -117,16 +121,18 @@ def drawground():
 		(280, 34), (320, 140), (320, 0), (-320,0) ) 
 	s.addcomponent(ground, "black", "black")
 	turtle.register_shape('ground', s)
-	#turtle.
 
 if __name__ == '__main__':
 	engine.init_screen(WIDTH, HEIGHT)
 	engine.init_engine()
 	engine.set_keyboard_handler(keyboard_cb)
+	drawground()
 	drawfus()
 	drawsun()
-	drawground()
+
 	box = Box()
+	gnd = Ground()
 	engine.add_obj(box)
+	engine.add_obj(gnd)
 	engine.engine()
 
