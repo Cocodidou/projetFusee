@@ -9,11 +9,11 @@ import time
 
 WIDTH = 640
 HEIGHT = 480
-speed = 0
-xspeed = 0
-countreac = 0
+speed = 0 # vitesse
+countreac = 0 # compteur de frames du réacteur
 basesize = 15
 sundiam = 150
+shiphead = 0 # tilt du vaisseau
 
 class Ground(engine.GameObject):
 	def __init__(self):
@@ -29,6 +29,8 @@ class Sun(engine.GameObject):
 class Fusee(engine.GameObject):
 	def __init__(self):
 		super().__init__(0, 0, 0, 0, 'fusee', 'black')
+	def heading(self):
+		return shiphead
 	def move(self):
 		global speed
 		global xspeed
@@ -62,7 +64,8 @@ def keyboard_cb(key):
 	global xspeed
 	global ship
 	global countreac
-	if key == 'space':
+	global shiphead
+	if key == 'space' or key == 'Up':
 		speed -= 0.2
 		ship.color = "red"
 		countreac = 0
@@ -70,9 +73,9 @@ def keyboard_cb(key):
 		print("Au revoir...")
 		engine.exit_engine()
 	elif key == 'Left':
-		xspeed -= 0.1
+		shiphead -= 2
 	elif key == 'Right':
-		xspeed += 0.1
+		shiphead += 2
 	else:
 		print(key)
 
@@ -107,7 +110,7 @@ def banner(s):
 	turtle.color('black')
 	turtle.write(s, True, align='center', font=('Arial', 48, 'italic'))
 	time.sleep(3)
-	turtle.undo()
+	#turtle.undo()
 
 
 def drawsun():
