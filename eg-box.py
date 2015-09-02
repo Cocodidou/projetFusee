@@ -30,19 +30,19 @@ class Box(engine.GameObject):
 		global lost
 		global box
 		global countreac
-		if self.y >= HEIGHT / 2. - sundiam:
+		if self.y >= HEIGHT / 2. - 3 * basesize - sundiam / 2:
 			speed = 0
 			if lost == False:
 				banner("Burnt!")
 				lost = True
-		elif self.y > (-230 + speed) or speed < 0:
+		elif self.y > (-1 * HEIGHT / 2 + basesize + speed) or speed < 0:
 			self.y -= speed
 			speed += 0.02
 		else:
 			if abs(speed) > 3:
 				banner("Crashed!")
 				lost = True
-			self.y = -230
+			self.y = -1 * HEIGHT / 2 + basesize
 			speed = 0
 		countreac += 1
 		if countreac > 20:
