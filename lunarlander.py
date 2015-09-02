@@ -52,8 +52,8 @@ class Fusee(engine.GameObject):
 			self.y += yspeed
 			self.x += xspeed
 			
-			xspeed = 0.7 * xspeed # histoire qu'il ne file pas à l'infini
-			yspeed = yspeed - 0.02 # gravité
+			xspeed = 0.99 * xspeed # histoire qu'il ne file pas à l'infini
+			yspeed = 0.99 * yspeed - 0.02 # gravité
 			
 		else:
 			if abs(speed) > 2:
@@ -76,8 +76,8 @@ def keyboard_cb(key):
 	global countreac
 	global shiphead
 	if key == 'space' or key == 'Up':
-		xspeed = xspeed + math.cos(shiphead) * 0.2
-		yspeed = yspeed + math.sin(shiphead) * 0.2
+		xspeed = xspeed + math.sin(-3.1415926535 * shiphead / 180) * 0.2
+		yspeed = yspeed + math.cos(3.1415926535 * shiphead / 180) * 0.2
 		
 		ship.color = "red"
 		countreac = 0
