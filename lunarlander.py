@@ -54,7 +54,7 @@ class Fusee(engine.GameObject):
 		xspeed = 0.99 * xspeed # histoire qu'il ne file pas à l'infini
 		yspeed = 0.99 * yspeed - 0.02 # gravité
 
-		countreac += 1
+		countreac += 1 
 		if countreac > 20:
 			ship.shape = "fusee"
 	def isoob(self):
