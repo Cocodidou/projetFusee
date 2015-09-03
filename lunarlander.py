@@ -53,15 +53,7 @@ class Fusee(engine.GameObject):
 			
 		xspeed = 0.99 * xspeed # histoire qu'il ne file pas à l'infini
 		yspeed = 0.99 * yspeed - 0.02 # gravité
-			
-		#else:
-			#if abs(math.sqrt(xspeed ** 2 + yspeed ** 2)) > 2 or abs(shiphead) >= 15:
-				#banner("Crashed!")
-			#else:
-				#banner("Landed!")
-			#self.y = -1 * HEIGHT / 2 + basesize
-			#speed = 0
-			#engine.exit_engine()
+
 		countreac += 1
 		if countreac > 20:
 			ship.shape = "fusee"
@@ -134,7 +126,7 @@ def drawground():
 	turtle.register_shape('ground', s)
 
 def collision_cb_SL(sun, lander):
-	if math.sqrt( (lander.x - sun.x) ** 2 + (lander.y - sun.y) ** 2 ) <= sundiam/2 + basesize :
+	if math.sqrt( (lander.x - sun.x) ** 2 + (lander.y - sun.y) ** 2 ) <= sundiam/2 + 2*basesize :
 		banner("Sunned!")
 		engine.exit_engine()
 
