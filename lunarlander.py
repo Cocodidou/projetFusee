@@ -58,6 +58,11 @@ class Fusee(engine.GameObject):
 		if countreac > 20:
 			ship.shape = "fusee"
 	def isoob(self):
+		if super().isoob():
+			if self.x <= -WIDTH/2:
+				self.x = WIDTH / 2
+			if self.x >= WIDTH/2:
+				self.x = -WIDTH / 2
 		return False
 
 
