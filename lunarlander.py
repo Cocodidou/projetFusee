@@ -139,7 +139,7 @@ def collision_cb_SL(sun, lander):
 		engine.exit_engine()
 
 def collision_cb_LS(lander, sun):
-    collision_cb_SL(sun, lander)
+    collision_cb_SL(sun, lander) 
 
 def genericGroundCollisionCall():
 	step = 0
