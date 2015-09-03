@@ -14,17 +14,22 @@ countreac = 0 # compteur de frames du réacteur
 basesize = 10 # unité de base du vaisseau
 sundiam = 150 # diamètre du soleil
 
+lvl = ((-320, 120), (-280, 41), (-240, 27),
+	(-200, 59), (-160, 25), (-120, 43), (-80, 56),
+	(-40, 20), (0, 20), (40, 20), (80, 44),
+(120, 28), (160, 66), (200, 29), (240, 64),
+(280, 34), (320, 140), (320, 0), (-320,0) ) 
 
 class Ground(engine.GameObject):
 	def __init__(self):
 		super().__init__(0, -HEIGHT/2, 0, 0, 'ground', '#8B4513')
 	def heading(self):
 		return 90
-	ground = ((-320, 120), (-280, 41), (-240, 27),
-		(-200, 59), (-160, 25), (-120, 43), (-80, 56),
-		(-40, 20), (0, 20), (40, 20), (80, 44),
-	(120, 28), (160, 66), (200, 29), (240, 64),
-	(280, 34), (320, 140), (320, 0), (-320,0) ) 
+	def isoob(self):
+		return False
+	ground = lvl
+
+	
 
 class Sun(engine.GameObject):
 	def __init__(self):
@@ -143,13 +148,8 @@ def drawsun():
 	turtle.register_shape('sun',circ)
 
 def drawground():
-	s = turtle.Shape("compound")
-	ground = ((-320, 120), (-280, 41), (-240, 27),
-		(-200, 59), (-160, 25), (-120, 43), (-80, 56),
-		(-40, 20), (0, 20), (40, 20), (80, 44),
-		(120, 28), (160, 66), (200, 29), (240, 64),
-		(280, 34), (320, 140), (320, 0), (-320,0) ) 
-	s.addcomponent(ground, "#8B4513", "#8B4513")
+	s = turtle.Shape("compound") 
+	s.addcomponent(lvl, "#8B4513", "#8B4513")
 	turtle.register_shape('ground', s)
 
 def drawBar(flevel):
