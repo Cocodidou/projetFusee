@@ -57,6 +57,8 @@ class Fusee(engine.GameObject):
 		countreac += 1
 		if countreac > 20:
 			ship.shape = "fusee"
+	def isoob(self):
+		return False
 
 
 def keyboard_cb(key):
@@ -162,6 +164,8 @@ def collide_SH_GD(ship, gnd):
 
 def collide_GD_SH(gnd, ship):
 	genericGroundCollisionCall(ship, gnd)
+
+
 
 if __name__ == '__main__':
 	engine.init_screen(WIDTH, HEIGHT)
