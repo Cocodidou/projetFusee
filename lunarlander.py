@@ -11,7 +11,7 @@ WIDTH = 640
 HEIGHT = 480
 speed = 0 # vitesse
 countreac = 0 # compteur de frames du réacteur
-basesize = 15
+basesize = 30
 sundiam = 150
 shiphead = 0 # tilt du vaisseau
 
@@ -27,7 +27,7 @@ class Ground(engine.GameObject):
 class Sun(engine.GameObject):
 	def __init__(self):
 		super().__init__(0, HEIGHT/2, 0, 0, 'sun', 'yellow')
-
+		#super().__init__(0, 0, 0, 0, 'sun', 'yellow')
 
 class Fusee(engine.GameObject):
 	def __init__(self):
@@ -94,8 +94,13 @@ def keyboard_cb(key):
 def drawfus(): # spaceship!
 	global basesize
 	B = basesize
+	turtle.home()
 	turtle.begin_poly()
-	#turtle.fd(-1.5 * B)
+	# pour avoir un départ à 0,0... il y a mieux, je pense!
+	turtle.rt(-90)
+	turtle.fd(-1.5 * B)
+	turtle.rt(90)
+	# réacteur gauche
 	turtle.fd(B)
 	turtle.rt(90)
 	turtle.fd(B)
@@ -103,20 +108,55 @@ def drawfus(): # spaceship!
 	turtle.fd(B)
 	turtle.rt(90)
 	turtle.fd(B)
+	# partie centrale: arête basse
 	turtle.fd(2.25 * B)
+	# réacteur droit
 	turtle.rt(90)
 	turtle.fd(B)
 	turtle.rt(90)
 	turtle.fd(B)
 	turtle.rt(90)
 	turtle.fd(B)
+	# partie centrale: arête droite
 	turtle.fd(3 * B)
+	# partie centrale: arête haute
 	turtle.rt(-90)
 	turtle.fd(1.25 * B)
-	
+	turtle.rt(-90)
+	turtle.fd(3 * B)
+	# l'arête gauche de la partie centrale est implicite
 	turtle.end_poly()
 	poly = turtle.get_poly() # c'est le poly... yveslemaire.poly
 	turtle.register_shape('fusee', poly)
+
+def drawfus_alt():
+	global basesize
+	B = basesize
+	turtle.home()
+	turtle.begin_poly()
+	#turtle.rt(180*(1-math.acos(1/(2*math.sqrt(5)))/3.1415926535))
+	#turtle.fd(B)
+	#turtle.rt(180*(math.acos(1/(math.sqrt(5))) - math.acos(1/(2*math.sqrt(5))) )/3.1415926535)
+	#turtle.fd(2*B)
+	#turtle.rt(360 * math.acos(1/math.sqrt(5)) / 3.1415926535)
+	#turtle.fd(2*B)
+	#turtle.rt(180*(math.acos(1/(math.sqrt(5))) - math.acos(1/(2*math.sqrt(5))) )/3.1415926535)
+	#turtle.fd(B)
+	turtle.left(90)
+	turtle.fd(B/2)
+	turtle.left(120)
+	turtle.fd(B)
+	turtle.left(120)
+	turtle.fd(B)
+	turtle.left(120)
+	turtle.fd(B/2)
+	#turtle.rt(300)
+	#turtle.fd(B)
+	#turtle.rt(300)
+	#turtle.fd(B/2)
+	turtle.end_poly()
+	poly = turtle.get_poly() # c'est le poly... yveslemaire.poly
+	turtle.register_shape('fusee',poly)
 
 def banner(s):
 	turtle.home()
@@ -128,8 +168,9 @@ def banner(s):
 
 def drawsun():
 	global sundiam
+	turtle.home()
 	turtle.begin_poly()
-	turtle.setpos(-sundiam/2,0)
+	#turtle.setpos(-sundiam/2,0)
 	turtle.circle(sundiam/2, None, None)
 	turtle.end_poly()
 	circ = turtle.get_poly()
@@ -145,12 +186,18 @@ def drawground():
 	s.addcomponent(ground, "#8B4513", "#8B4513")
 	turtle.register_shape('ground', s)
 
+def sunCollisionCall():
+    return False
+
+def genericGroundCollisionCall():
+    return False
+
 if __name__ == '__main__':
 	engine.init_screen(WIDTH, HEIGHT)
 	engine.init_engine()
 	engine.set_keyboard_handler(keyboard_cb)
 	drawground()
-	drawfus()
+	drawfus_alt()
 	drawsun()
 
 	ship = Fusee()
