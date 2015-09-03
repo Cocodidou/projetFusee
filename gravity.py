@@ -49,6 +49,10 @@ class Fusee(engine.GameObject):
 		countreac += 1 
 		if countreac > 20:
 			self.shape = "fusee"
+		
+		if self.fuelLevel > 0:
+			self.fuelLevel -= 0.1
+		
 	def isoob(self):
 		if super().isoob():
 			if self.x <= -WIDTH/2:
@@ -57,21 +61,27 @@ class Fusee(engine.GameObject):
 				self.x = -WIDTH / 2
 		return False
 	
+	def getFuelLevel(self):
+		return fuelLevel
+	
 	xspeed = 0
 	yspeed = 0
 	fuelLevel = 100
 	head = 0
 
+class GreenBarFuel(engine.GameObject):
+	def __init__(self):
+		super().__init__(0, 0, 0, 0, 'barre', 'green')
 
 def keyboard_cb(key):
 	global ship
 	global countreac
 	if key == 'space' or key == 'Up':
-		ship.xspeed +=  math.sin(-3.1415926535 * ship.head / 180) * 0.2
-		ship.yspeed += math.cos(3.1415926535 * ship.head / 180) * 0.2
-		
-		ship.shape = "fusee reac"
-		countreac = 0
+		if ship.fuelLevel > 0:
+			ship.xspeed +=  math.sin(-3.1415926535 * ship.head / 180) * 0.2
+			ship.yspeed += math.cos(3.1415926535 * ship.head / 180) * 0.2
+			ship.shape = "fusee reac"
+			countreac = 0
 	elif key == 'Escape':
 		print("Au revoir...")
 		engine.exit_engine()
@@ -151,7 +161,7 @@ def genericGroundCollisionCall(ship, gnd):
 			b = 1
 			c = -1 * y0 + x0 * (y1 - y0) / (x1 - x0)
 			d = abs(a * x + b * y + c) / math.sqrt(a ** 2 + b ** 2)
-			print(math.sqrt(ship.xspeed ** 2 + ship.yspeed ** 2))
+			print(ship.fuelLevel)
 			if (d <= 2*basesize and a != 0) or (d <= 2*basesize and a == 0 and (abs(ship.head) >= 15 or math.sqrt(ship.xspeed ** 2 + ship.yspeed ** 2) >= 1 )):
 				banner("Crashed!")
 				engine.exit_engine()
