@@ -11,9 +11,8 @@ WIDTH = 640
 HEIGHT = 480
 
 countreac = 0 # compteur de frames du réacteur
-basesize = 10
-sundiam = 150
-
+basesize = 10 # unité de base du vaisseau
+sundiam = 150 # diamètre du soleil
 
 
 class Ground(engine.GameObject):
@@ -52,15 +51,15 @@ class Fusee(engine.GameObject):
 			self.mode = 0
 		
 		if self.fuelLevel > 0 and self.mode == 1:
-			self.fuelLevel -= 0.1
+			self.fuelLevel -= 0.05
 		drawBar(self.fuelLevel)
-		ess.shape = "essence"#_"+str(self.fuelLevel) # BAD HACK HACK HACK!!!!!!!
+		ess.shape = "essence"
 		
 	def isoob(self):
 		if super().isoob():
 			if self.x <= -WIDTH/2:
 				self.x = WIDTH / 2
-			if self.x >= WIDTH/2:
+			elif self.x >= WIDTH/2:
 				self.x = -WIDTH / 2
 		return False
 	
@@ -78,6 +77,11 @@ class GreenBarFuel(engine.GameObject):
 		super().__init__(-300, 130, 0, 0, 'essence', 'green')
 	def heading(self):
 		return 180
+
+class LogoEssence(engine.GameObject):
+	def __init__(self):
+		super().__init__(-280, 160, 0, 0, 'ess.gif', 'green')
+	
 
 def keyboard_cb(key):
 	global ship
@@ -146,7 +150,7 @@ def drawBar(flevel):
 	s = turtle.Shape("compound")
 	rect = ((flevel, 0), (flevel, 10), (0,10), (0,0))
 	s.addcomponent(rect, "#008000", "#008000")
-	turtle.register_shape('essence',s)#_'+str(flevel),s)
+	turtle.register_shape('essence',s)
 
 def collision_cb_SL(sun, lander):
 	if math.sqrt( (lander.x - sun.x) ** 2 + (lander.y - sun.y) ** 2 ) <= sundiam/2 + 2*basesize :
@@ -166,7 +170,7 @@ def genericGroundCollisionCall(ship, gnd):
 		y1 = gnd.ground[i+1][1]
 		y = ship.y + HEIGHT /2
 		x = ship.x
-		if x0 <= ship.x and ship.x <= x1: # Here we are!
+		if x0 <= ship.x and ship.x <= x1 and x1 != x0: # Here we are!
 			a = -1 * (y1 - y0) / (x1 - x0)
 			b = 1
 			c = -1 * y0 + x0 * (y1 - y0) / (x1 - x0)
@@ -195,6 +199,7 @@ if __name__ == '__main__':
 	drawfus_alt()
 	drawsun()
 	drawBar(100)
+	turtle.register_shape("ess.gif")
 
 	ship = Fusee()
 	gnd = Ground()
@@ -202,8 +207,14 @@ if __name__ == '__main__':
 	ess = GreenBarFuel()
 	engine.add_obj(gnd)
 	engine.add_obj(sun)	
-	engine.add_obj(ship)
+
 	engine.add_obj(ess)
+	
+	logo = LogoEssence()
+	engine.add_obj(logo)
+	
+	engine.add_obj(ship)
+	
 	# Call collision_cb_SL() each step for each pair of {Sun, Lander}
 	engine.register_collision(Sun, Fusee, collision_cb_SL)
 	# Call collision_cb_LS() each step for each pair of {Lander, Sun}
