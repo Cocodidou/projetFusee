@@ -49,9 +49,12 @@ class Fusee(engine.GameObject):
 		countreac += 1 
 		if countreac > 20:
 			self.shape = "fusee"
+			self.mode = 0
 		
-		if self.fuelLevel > 0:
+		if self.fuelLevel > 0 and self.mode == 1:
 			self.fuelLevel -= 0.1
+		drawBar(self.fuelLevel)
+		ess.shape = "essence"#_"+str(self.fuelLevel) # BAD HACK HACK HACK!!!!!!!
 		
 	def isoob(self):
 		if super().isoob():
@@ -68,16 +71,20 @@ class Fusee(engine.GameObject):
 	yspeed = 0
 	fuelLevel = 100
 	head = 0
+	mode = 0
 
 class GreenBarFuel(engine.GameObject):
 	def __init__(self):
-		super().__init__(0, 0, 0, 0, 'barre', 'green')
+		super().__init__(-300, 130, 0, 0, 'essence', 'green')
+	def heading(self):
+		return 180
 
 def keyboard_cb(key):
 	global ship
 	global countreac
 	if key == 'space' or key == 'Up':
 		if ship.fuelLevel > 0:
+			ship.mode = 1
 			ship.xspeed +=  math.sin(-3.1415926535 * ship.head / 180) * 0.2
 			ship.yspeed += math.cos(3.1415926535 * ship.head / 180) * 0.2
 			ship.shape = "fusee reac"
@@ -89,9 +96,6 @@ def keyboard_cb(key):
 		ship.head -= 2
 	elif key == 'Left':
 		ship.head += 2
-	else:
-		print(key)
-
 
 def drawfus_alt():
 	global basesize
@@ -138,6 +142,12 @@ def drawground():
 	s.addcomponent(ground, "#8B4513", "#8B4513")
 	turtle.register_shape('ground', s)
 
+def drawBar(flevel):
+	s = turtle.Shape("compound")
+	rect = ((flevel, 0), (flevel, 10), (0,10), (0,0))
+	s.addcomponent(rect, "#008000", "#008000")
+	turtle.register_shape('essence',s)#_'+str(flevel),s)
+
 def collision_cb_SL(sun, lander):
 	if math.sqrt( (lander.x - sun.x) ** 2 + (lander.y - sun.y) ** 2 ) <= sundiam/2 + 2*basesize :
 		banner("Sunned!")
@@ -161,7 +171,6 @@ def genericGroundCollisionCall(ship, gnd):
 			b = 1
 			c = -1 * y0 + x0 * (y1 - y0) / (x1 - x0)
 			d = abs(a * x + b * y + c) / math.sqrt(a ** 2 + b ** 2)
-			print(ship.fuelLevel)
 			if (d <= 2*basesize and a != 0) or (d <= 2*basesize and a == 0 and (abs(ship.head) >= 15 or math.sqrt(ship.xspeed ** 2 + ship.yspeed ** 2) >= 1 )):
 				banner("Crashed!")
 				engine.exit_engine()
@@ -185,13 +194,16 @@ if __name__ == '__main__':
 	drawground()
 	drawfus_alt()
 	drawsun()
+	drawBar(100)
 
 	ship = Fusee()
 	gnd = Ground()
 	sun = Sun()
+	ess = GreenBarFuel()
 	engine.add_obj(gnd)
 	engine.add_obj(sun)	
 	engine.add_obj(ship)
+	engine.add_obj(ess)
 	# Call collision_cb_SL() each step for each pair of {Sun, Lander}
 	engine.register_collision(Sun, Fusee, collision_cb_SL)
 	# Call collision_cb_LS() each step for each pair of {Lander, Sun}
