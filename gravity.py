@@ -9,16 +9,12 @@ import time
 
 WIDTH = 640
 HEIGHT = 480
-speed = 0 # vitesse
+
 countreac = 0 # compteur de frames du réacteur
 basesize = 10
 sundiam = 150
-shiphead = 0 # tilt du vaisseau
 
 
-
-xspeed = 0
-yspeed = 0
 
 class Ground(engine.GameObject):
 	def __init__(self):
@@ -40,23 +36,19 @@ class Fusee(engine.GameObject):
 	def __init__(self):
 		super().__init__(0, 0, 0, 0, 'fusee', 'black')
 	def heading(self):
-		return shiphead
+		return self.head
 	def move(self):
-		global speed
-		global xspeed
-		global yspeed
-		global lost
 		global ship
 		global countreac
-		self.y += yspeed
-		self.x += xspeed
+		self.y += self.yspeed
+		self.x += self.xspeed
 			
-		xspeed = 0.99 * xspeed # histoire qu'il ne file pas à l'infini
-		yspeed = 0.99 * yspeed - 0.02 # gravité
+		self.xspeed = 0.99 * self.xspeed # histoire qu'il ne file pas à l'infini
+		self.yspeed = 0.99 * self.yspeed - 0.02 # gravité
 
 		countreac += 1 
 		if countreac > 20:
-			ship.shape = "fusee"
+			self.shape = "fusee"
 	def isoob(self):
 		if super().isoob():
 			if self.x <= -WIDTH/2:
@@ -64,18 +56,19 @@ class Fusee(engine.GameObject):
 			if self.x >= WIDTH/2:
 				self.x = -WIDTH / 2
 		return False
+	
+	xspeed = 0
+	yspeed = 0
+	fuelLevel = 100
+	head = 0
 
 
 def keyboard_cb(key):
-	global speed
-	global xspeed
-	global yspeed
 	global ship
 	global countreac
-	global shiphead
 	if key == 'space' or key == 'Up':
-		xspeed = xspeed + math.sin(-3.1415926535 * shiphead / 180) * 0.2
-		yspeed = yspeed + math.cos(3.1415926535 * shiphead / 180) * 0.2
+		ship.xspeed +=  math.sin(-3.1415926535 * ship.head / 180) * 0.2
+		ship.yspeed += math.cos(3.1415926535 * ship.head / 180) * 0.2
 		
 		ship.shape = "fusee reac"
 		countreac = 0
@@ -83,9 +76,9 @@ def keyboard_cb(key):
 		print("Au revoir...")
 		engine.exit_engine()
 	elif key == 'Right':
-		shiphead -= 2
+		ship.head -= 2
 	elif key == 'Left':
-		shiphead += 2
+		ship.head += 2
 	else:
 		print(key)
 
@@ -155,11 +148,11 @@ def genericGroundCollisionCall(ship, gnd):
 			b = 1
 			c = -1 * y0 + x0 * (y1 - y0) / (x1 - x0)
 			d = abs(a * x + b * y + c) / math.sqrt(a ** 2 + b ** 2)
-			print(math.sqrt(xspeed ** 2 + yspeed ** 2))
-			if (d <= 2*basesize and a != 0) or (d <= 2*basesize and a == 0 and (abs(shiphead) >= 15 or math.sqrt(xspeed ** 2 + yspeed ** 2) >= 1 )):
+			print(math.sqrt(ship.xspeed ** 2 + ship.yspeed ** 2))
+			if (d <= 2*basesize and a != 0) or (d <= 2*basesize and a == 0 and (abs(ship.head) >= 15 or math.sqrt(ship.xspeed ** 2 + ship.yspeed ** 2) >= 1 )):
 				banner("Crashed!")
 				engine.exit_engine()
-			elif (d <= 2*basesize and a == 0 and abs(shiphead) < 15):
+			elif (d <= 2*basesize and a == 0 and abs(ship.head) < 15):
 				banner("Landed!")
 				engine.exit_engine()
 
