@@ -39,8 +39,14 @@ class Fusee(engine.GameObject):
 	def move(self):
 		global ship
 		global countreac
-		self.y += self.yspeed
-		self.x += self.xspeed
+		
+		if abs(self.x) <= (1/3) * WIDTH or (self.x >= (1/3) * WIDTH and self.xspeed < 0) \
+		or (self.x <= -(1/3) * WIDTH and self.xspeed > 0):
+			self.y += self.yspeed
+			self.x += self.xspeed
+		else:
+			gnd.x -= self.xspeed
+			self.y += self.yspeed
 			
 		self.xspeed = 0.99 * self.xspeed # histoire qu'il ne file pas à l'infini
 		self.yspeed = 0.99 * self.yspeed - 0.02 # gravité
@@ -169,7 +175,7 @@ def genericGroundCollisionCall(ship, gnd):
 		x1 = gnd.ground[i+1][0]
 		y1 = gnd.ground[i+1][1]
 		y = ship.y + HEIGHT /2
-		x = ship.x
+		x = ship.x - gnd.x
 		if x0 <= ship.x and ship.x <= x1 and x1 != x0: # Here we are!
 			a = -1 * (y1 - y0) / (x1 - x0)
 			b = 1
