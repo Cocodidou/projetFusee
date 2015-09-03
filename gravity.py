@@ -92,7 +92,10 @@ def drawfus_alt():
 	ship.addcomponent(mesh, "black", "black")
 	
 	redship = turtle.Shape("compound")
-	redship.addcomponent(mesh, "red", "red")
+	reaction = ((1.5*B, 1*B), (2*B, 0), (1.5*B, -1*B), (1*B, 0))
+	
+	redship.addcomponent(mesh, "black", "black")
+	redship.addcomponent(reaction, "red", "red") # réacteur, (c) Antonin
 	
 	turtle.register_shape('fusee', ship)
 	turtle.register_shape('fusee reac', redship)
