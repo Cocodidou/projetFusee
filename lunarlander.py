@@ -149,14 +149,27 @@ def genericGroundCollisionCall(ship, gnd):
 		y0 = gnd.ground[i][1]
 		x1 = gnd.ground[i+1][0]
 		y1 = gnd.ground[i+1][1]
+		y = ship.y + HEIGHT /2
+		x = ship.x
 		if x0 <= ship.x and ship.x <= x1: # Here we are!
 			a = -1 * (y1 - y0) / (x1 - x0)
 			b = 1
 			c = -1 * y0 + x0 * (y1 - y0) / (x1 - x0)
-			d = abs(a * ship.x + b * ship.y + c) / math.sqrt(a ** 2 + b ** 2)
-			if d <= basesize and a != 0 and shiphead <= 15:
+			d = abs(a * x + b * y + c) / math.sqrt(a ** 2 + b ** 2)
+			print(d)
+			if (d <= basesize and a != 0) or (a == 0 and abs(shiphead) >= 15):
 				banner("Crashed!")
 				engine.exit_engine()
+			if (d <= basesize and a == 0 and abs(shiphead) < 15):
+				banner("Landed!")
+				engine.exit_engine()
+
+
+def collide_SH_GD(ship, gnd):
+	genericGroundCollisionCall(ship, gnd)
+
+def collide_GD_SH(gnd, ship):
+	genericGroundCollisionCall(ship, gnd)
 
 if __name__ == '__main__':
 	engine.init_screen(WIDTH, HEIGHT)
@@ -176,5 +189,9 @@ if __name__ == '__main__':
 	engine.register_collision(Sun, Fusee, collision_cb_SL)
 	# Call collision_cb_LS() each step for each pair of {Lander, Sun}
 	engine.register_collision(Fusee, Sun, collision_cb_LS)
+
+	engine.register_collision(Fusee, Ground, collide_SH_GD)
+	engine.register_collision(Ground, Fusee, collide_GD_SH)
+
 	engine.engine()
 
