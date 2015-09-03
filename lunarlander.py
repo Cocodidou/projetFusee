@@ -139,13 +139,24 @@ def collision_cb_SL(sun, lander):
 		engine.exit_engine()
 
 def collision_cb_LS(lander, sun):
-    collision_cb_SL(sun, lander) 
+    collision_cb_SL(sun, lander)
 
-def genericGroundCollisionCall():
+def genericGroundCollisionCall(ship, gnd):
 	step = 0
 	orig = 0
-	
-	
+	for i in range(len(gnd.ground)-1):
+		x0 = gnd.ground[i][0]
+		y0 = gnd.ground[i][1]
+		x1 = gnd.ground[i+1][0]
+		y1 = gnd.ground[i+1][1]
+		if x0 <= ship.x and ship.x <= x1: # Here we are!
+			a = -1 * (y1 - y0) / (x1 - x0)
+			b = 1
+			c = -1 * y0 + x0 * (y1 - y0) / (x1 - x0)
+			d = abs(a * ship.x + b * ship.y + c) / math.sqrt(a ** 2 + b ** 2)
+			if d <= basesize and a != 0 and shiphead <= 15:
+				banner("Crashed!")
+				engine.exit_engine()
 
 if __name__ == '__main__':
 	engine.init_screen(WIDTH, HEIGHT)
