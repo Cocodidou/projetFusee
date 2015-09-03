@@ -148,11 +148,11 @@ def genericGroundCollisionCall(ship, gnd):
 			b = 1
 			c = -1 * y0 + x0 * (y1 - y0) / (x1 - x0)
 			d = abs(a * x + b * y + c) / math.sqrt(a ** 2 + b ** 2)
-			print(d)
-			if (d <= 2*basesize and a != 0) or (d <= 2*basesize and a == 0 and abs(shiphead) >= 15):
+			print(math.sqrt(xspeed ** 2 + yspeed ** 2))
+			if (d <= 2*basesize and a != 0) or (d <= 2*basesize and a == 0 and (abs(shiphead) >= 15 or math.sqrt(xspeed ** 2 + yspeed ** 2) >= 1 )):
 				banner("Crashed!")
 				engine.exit_engine()
-			if (d <= 2*basesize and a == 0 and abs(shiphead) < 15):
+			elif (d <= 2*basesize and a == 0 and abs(shiphead) < 15):
 				banner("Landed!")
 				engine.exit_engine()
 
