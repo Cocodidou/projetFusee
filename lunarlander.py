@@ -11,7 +11,7 @@ WIDTH = 640
 HEIGHT = 480
 speed = 0 # vitesse
 countreac = 0 # compteur de frames du réacteur
-basesize = 30
+basesize = 15
 sundiam = 150
 shiphead = 0 # tilt du vaisseau
 
@@ -41,28 +41,28 @@ class Fusee(engine.GameObject):
 		global lost
 		global ship
 		global countreac
-		if self.y >= HEIGHT / 2. - 3 * basesize - sundiam / 2:
-			speed = 0
-			banner("Burnt!")
-			lost = True
-			engine.exit_engine()
-		elif self.y > (-1 * HEIGHT / 2 + basesize + speed + 20) or speed < 0: 
+		#if self.y >= HEIGHT / 2. - 3 * basesize - sundiam / 2:
+			#speed = 0
+			#banner("Burnt!")
+			#lost = True
+			#engine.exit_engine()
+		#elif self.y > (-1 * HEIGHT / 2 + basesize + speed + 20) or speed < 0: 
 			# le zéro de la fusée est au coin supérieur droit du réacteur gauche
 			# ceci est À CHANGER IMPÉRATIVEMENT mais je suis un gros feignant
-			self.y += yspeed
-			self.x += xspeed
+		self.y += yspeed
+		self.x += xspeed
 			
-			xspeed = 0.99 * xspeed # histoire qu'il ne file pas à l'infini
-			yspeed = 0.99 * yspeed - 0.02 # gravité
+		xspeed = 0.99 * xspeed # histoire qu'il ne file pas à l'infini
+		yspeed = 0.99 * yspeed - 0.02 # gravité
 			
-		else:
-			if abs(math.sqrt(xspeed ** 2 + yspeed ** 2)) > 2 or abs(shiphead) >= 15:
-				banner("Crashed!")
-			else:
-				banner("Landed!")
-			self.y = -1 * HEIGHT / 2 + basesize
-			speed = 0
-			engine.exit_engine()
+		#else:
+			#if abs(math.sqrt(xspeed ** 2 + yspeed ** 2)) > 2 or abs(shiphead) >= 15:
+				#banner("Crashed!")
+			#else:
+				#banner("Landed!")
+			#self.y = -1 * HEIGHT / 2 + basesize
+			#speed = 0
+			#engine.exit_engine()
 		countreac += 1
 		if countreac > 20:
 			ship.color = "black"
@@ -132,31 +132,12 @@ def drawfus(): # spaceship!
 def drawfus_alt():
 	global basesize
 	B = basesize
-	turtle.home()
-	turtle.begin_poly()
-	#turtle.rt(180*(1-math.acos(1/(2*math.sqrt(5)))/3.1415926535))
-	#turtle.fd(B)
-	#turtle.rt(180*(math.acos(1/(math.sqrt(5))) - math.acos(1/(2*math.sqrt(5))) )/3.1415926535)
-	#turtle.fd(2*B)
-	#turtle.rt(360 * math.acos(1/math.sqrt(5)) / 3.1415926535)
-	#turtle.fd(2*B)
-	#turtle.rt(180*(math.acos(1/(math.sqrt(5))) - math.acos(1/(2*math.sqrt(5))) )/3.1415926535)
-	#turtle.fd(B)
-	turtle.left(90)
-	turtle.fd(B/2)
-	turtle.left(120)
-	turtle.fd(B)
-	turtle.left(120)
-	turtle.fd(B)
-	turtle.left(120)
-	turtle.fd(B/2)
-	#turtle.rt(300)
-	#turtle.fd(B)
-	#turtle.rt(300)
-	#turtle.fd(B/2)
-	turtle.end_poly()
-	poly = turtle.get_poly() # c'est le poly... yveslemaire.poly
-	turtle.register_shape('fusee',poly)
+	
+	ship = turtle.Shape("compound")
+	mesh = ((0,-1*B), (-2*B, -2*B), (0, 2*B), (2*B, -2*B), (0, -1*B) ) 
+	ship.addcomponent(mesh, "black", "black")
+	turtle.register_shape('fusee', ship)
+
 
 def banner(s):
 	turtle.home()
@@ -169,8 +150,8 @@ def banner(s):
 def drawsun():
 	global sundiam
 	turtle.home()
+	turtle.setpos(0,-sundiam/2)
 	turtle.begin_poly()
-	#turtle.setpos(-sundiam/2,0)
 	turtle.circle(sundiam/2, None, None)
 	turtle.end_poly()
 	circ = turtle.get_poly()
@@ -186,11 +167,16 @@ def drawground():
 	s.addcomponent(ground, "#8B4513", "#8B4513")
 	turtle.register_shape('ground', s)
 
-def sunCollisionCall():
-    return False
+def collision_cb_SL(sun, lander):
+	if math.sqrt( (lander.x - sun.x) ** 2 + (lander.y - sun.y) ** 2 ) <= sundiam/2:
+		banner("Sunned!")
+		engine.exit_engine()
+
+def collision_cb_LS(lander, sun):
+    collision_cb_SL(sun, lander)
 
 def genericGroundCollisionCall():
-    return False
+	return False
 
 if __name__ == '__main__':
 	engine.init_screen(WIDTH, HEIGHT)
@@ -206,5 +192,9 @@ if __name__ == '__main__':
 	engine.add_obj(gnd)
 	engine.add_obj(sun)	
 	engine.add_obj(ship)
+	# Call collision_cb_SL() each step for each pair of {Sun, Lander}
+	engine.register_collision(Sun, Fusee, collision_cb_SL)
+	# Call collision_cb_LS() each step for each pair of {Lander, Sun}
+	engine.register_collision(Fusee, Sun, collision_cb_LS)
 	engine.engine()
 
