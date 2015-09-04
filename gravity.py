@@ -15,11 +15,12 @@ countreac = 0 # compteur de frames du réacteur
 basesize = 10 # unité de base du vaisseau
 sundiam = 150 # diamètre du soleil
 
-lvl = ((-320, 120), (-280, 41), (-240, 27),
-	(-200, 59), (-160, 25), (-120, 43), (-80, 56),
-	(-40, 20), (0, 20), (40, 20), (80, 44),
-(120, 28), (160, 66), (200, 29), (240, 64),
-(280, 34), (320, 140), (320, 0), (-320,0) ) 
+#lvl = ((-320, 120), (-280, 41), (-240, 27),
+	#(-200, 59), (-160, 25), (-120, 43), (-80, 56),
+	#(-40, 20), (0, 20), (40, 20), (80, 44),
+#(120, 28), (160, 66), (200, 29), (240, 64),
+#(280, 34), (320, 140), (320, 0), (-320,0) ) 
+lvl = ()
 
 class Ground(engine.GameObject):
 	def __init__(self):
@@ -28,8 +29,8 @@ class Ground(engine.GameObject):
 		return 90
 	def isoob(self):
 		return False
-	ground = lvl
-
+	#ground = lvl
+	ground = ()
 	
 
 class Sun(engine.GameObject):
@@ -197,17 +198,36 @@ def collide_GD_SH(gnd, ship):
 	genericGroundCollisionCall(ship, gnd)
 
 def build_random_map(width):
-	random.seed(os.time())
-	zero_pos = random.randint(0, width-30)
-	mountains_before = random.randint(0, zero_pos / 10)
-	mountains_after = random.randint(0, zero_pos / 10)
+	#random.seed(os.time())
+	zero_pos = random.randint(0, width-100)
 	
+	num_mountains = random.randint(50, 200)
+	
+	mountains = []
+	
+	mountains.append((0, random.randint(20,120)))
+	mountains.append((width, random.randint(20,120)))
+	
+	mountains.append((zero_pos, 20))
+	mountains.append((zero_pos + 100, 20))
+	
+	for i in range(num_mountains):
+		mountains.append((random.randint(20,  width - 20), random.randint(20,120)))
+	
+	mnt_sort = sorted(mountains, key=lambda x: x[0])
+	
+	ret = [ x if x[0] > zero_pos + 100 or x[0] < zero_pos else (x[0], 20) for x in mnt_sort ]
+	ret.append((width, 0))
+	ret.append((0, 0))
+	
+	return tuple(ret)
 
 
 if __name__ == '__main__':
 	engine.init_screen(WIDTH, HEIGHT)
 	engine.init_engine()
 	engine.set_keyboard_handler(keyboard_cb)
+	lvl = build_random_map(4000)
 	drawground()
 	drawfus_alt()
 	drawsun()
@@ -216,6 +236,8 @@ if __name__ == '__main__':
 
 	ship = Fusee()
 	gnd = Ground()
+	gnd.ground = lvl
+	gnd.x = -2000
 	sun = Sun()
 	ess = GreenBarFuel()
 	engine.add_obj(gnd)
