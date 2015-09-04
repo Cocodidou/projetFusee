@@ -194,7 +194,7 @@ def genericGroundCollisionCall(ship, gnd):
 				print(str(x0) + ":" + str(y0) + ";" + str(x1) + ":" + str(y1))
 				banner("Crashed!")
 				engine.exit_engine()
-			elif (d <= 2*basesize and a == 0 and abs(ship.head) < 15):
+			elif (d <= 2*basesize and abs(a) <= 1 and abs(ship.head) < 15):
 				banner("Landed!")
 				engine.exit_engine()
 
@@ -209,7 +209,7 @@ def build_random_map(width):
 	#random.seed(os.time())
 	zero_pos = random.randint(0, width-100)
 	
-	num_mountains = random.randint(50, 800)
+	num_mountains = random.randint(50, 100)
 	
 	mountains = []
 	
@@ -221,6 +221,8 @@ def build_random_map(width):
 	
 	for i in range(num_mountains):
 		mountains.append((random.randint(20,  width - 20), random.randint(20,120)))
+		#mountwidth = random.randint(20, 100)
+		
 	
 	mnt_sort = sorted(mountains, key=lambda x: x[0])
 	
