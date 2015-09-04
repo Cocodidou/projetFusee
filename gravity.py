@@ -6,6 +6,7 @@ import engine
 import random
 import math
 import time
+import os
 
 WIDTH = 640
 HEIGHT = 480
@@ -195,6 +196,12 @@ def collide_SH_GD(ship, gnd):
 def collide_GD_SH(gnd, ship):
 	genericGroundCollisionCall(ship, gnd)
 
+def build_random_map(width):
+	random.seed(os.time())
+	zero_pos = random.randint(0, width-30)
+	mountains_before = random.randint(0, zero_pos / 10)
+	mountains_after = random.randint(0, zero_pos / 10)
+	
 
 
 if __name__ == '__main__':
