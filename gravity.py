@@ -111,7 +111,7 @@ def keyboard_cb(key):
 			ship.shape = "fusee reac"
 			countreac = 0
 	elif key == 'Escape':
-		print("Au revoir...")
+		#print("Au revoir...")
 		engine.exit_engine()
 	elif key == 'Right':
 		ship.head -= 2
@@ -182,16 +182,16 @@ def genericGroundCollisionCall(ship, gnd):
 		y0 = gnd.ground[i][1]
 		x1 = gnd.ground[i+1][0]
 		y1 = gnd.ground[i+1][1]
-		if x0 < x and x < x1 and x1 != x0 and y - 2 * basesize < max(y1, y0): # Here we are!
-			# Bad hack: le test sur y ne doit pas être nécessaire
+		if x0 < x and x < x1 and x1 != x0 and y - 2 * basesize < max(y1, y0):
+			# BAD HACK: le test sur y ne doit pas être nécessaire
 			# mathématiquement parlant
 			a = y0 - y1
 			b = x1 - x0
 			c = (x0 - x1) * y0 + (y1 - y0) * x0
 			d = abs(a * x + b * y + c) / math.sqrt(a ** 2 + b ** 2)
-			print(d)
+			#print(d)
 			if (d <= basesize and a != 0) or (d <= 2*basesize and a == 0 and (abs(ship.head) >= 15 or math.sqrt(ship.xspeed ** 2 + ship.yspeed ** 2) >= 1 )):
-				print(str(x0) + ":" + str(y0) + ";" + str(x1) + ":" + str(y1))
+				#print(str(x0) + ":" + str(y0) + ";" + str(x1) + ":" + str(y1))
 				banner("Crashed!")
 				engine.exit_engine()
 			elif (d <= 2*basesize and abs(a) <= 1 and abs(ship.head) < 15):
@@ -221,6 +221,9 @@ def build_random_map(width):
 	
 	ins = 0
 	
+	# La technique la plus pourrie du monde pour séparer des montagnes
+	# en attendant de faire ça "fractalement"
+	
 	while ins < num_mountains:
 		t = (random.randint(20,  width - 20), random.randint(20,120))
 		prob = False
@@ -230,7 +233,7 @@ def build_random_map(width):
 		if prob == False:
 			ins += 1
 			mountains.append(t)
-		print(ins)
+		#print(ins)
 	
 	mnt_sort = sorted(mountains, key=lambda x: x[0])
 	
@@ -268,9 +271,7 @@ if __name__ == '__main__':
 	
 	engine.add_obj(ship)
 	
-	# Call collision_cb_SL() each step for each pair of {Sun, Lander}
 	engine.register_collision(Sun, Fusee, collision_cb_SL)
-	# Call collision_cb_LS() each step for each pair of {Lander, Sun}
 	engine.register_collision(Fusee, Sun, collision_cb_LS)
 
 	engine.register_collision(Fusee, Ground, collide_SH_GD)
