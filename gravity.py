@@ -209,7 +209,7 @@ def build_random_map(width):
 	#random.seed(os.time())
 	zero_pos = random.randint(0, width-100)
 	
-	num_mountains = random.randint(50, 100)
+	num_mountains = random.randint(50, 70)
 	
 	mountains = []
 	
@@ -219,10 +219,18 @@ def build_random_map(width):
 	mountains.append((zero_pos, 20))
 	mountains.append((zero_pos + 100, 20))
 	
-	for i in range(num_mountains):
-		mountains.append((random.randint(20,  width - 20), random.randint(20,120)))
-		#mountwidth = random.randint(20, 100)
-		
+	ins = 0
+	
+	while ins < num_mountains:
+		t = (random.randint(20,  width - 20), random.randint(20,120))
+		prob = False
+		for j in mountains:
+			if abs(t[0] - j[0]) <= 50:
+				prob = True
+		if prob == False:
+			ins += 1
+			mountains.append(t)
+		print(ins)
 	
 	mnt_sort = sorted(mountains, key=lambda x: x[0])
 	
