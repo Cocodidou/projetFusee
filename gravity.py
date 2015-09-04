@@ -209,7 +209,7 @@ def build_random_map(width):
 	#random.seed(os.time())
 	zero_pos = random.randint(0, width-100)
 	
-	num_mountains = random.randint(50, 200)
+	num_mountains = random.randint(50, 800)
 	
 	mountains = []
 	
