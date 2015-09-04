@@ -48,8 +48,11 @@ class Fusee(engine.GameObject):
 		global ship
 		global countreac
 		
-		if abs(self.x) <= (1/3) * WIDTH or (self.x >= (1/3) * WIDTH and self.xspeed < 0) \
-		or (self.x <= -(1/3) * WIDTH and self.xspeed > 0) or (gnd.x >= -1 * WIDTH / 2 and self.x <= (1/3) * WIDTH) or (gnd.x <= WIDTH/2 - wlength and self.x >= -1 * (1/3) * WIDTH):
+		if abs(self.x) <= (1/3) * WIDTH \
+		or (self.x >= (1/3) * WIDTH and self.xspeed < 0) \
+		or (self.x <= -(1/3) * WIDTH and self.xspeed > 0) \
+		or (gnd.x >= -1 * WIDTH / 2 and self.x <= (1/3) * WIDTH) \
+		or (gnd.x <= WIDTH/2 - wlength and self.x >= -1 * (1/3) * WIDTH):
 			self.y += self.yspeed
 			self.x += self.xspeed
 		else:
@@ -172,14 +175,14 @@ def collision_cb_LS(lander, sun):
 def genericGroundCollisionCall(ship, gnd):
 	step = 0
 	orig = 0
+	y = ship.y + HEIGHT /2
+	x = ship.x - gnd.x
 	for i in range(len(gnd.ground)-1):
 		x0 = gnd.ground[i][0]
 		y0 = gnd.ground[i][1]
 		x1 = gnd.ground[i+1][0]
 		y1 = gnd.ground[i+1][1]
-		y = ship.y + HEIGHT /2
-		x = ship.x - gnd.x
-		if y - 2*basesize < max(y1, y0) and x0 < x and x < x1 and x1 != x0: # Here we are!
+		if x0 < x and x < x1 and x1 != x0 and y - 2 * basesize < max(y1, y0): # Here we are!
 			# Bad hack: le test sur y ne doit pas être nécessaire
 			# mathématiquement parlant
 			a = y0 - y1
@@ -187,7 +190,7 @@ def genericGroundCollisionCall(ship, gnd):
 			c = (x0 - x1) * y0 + (y1 - y0) * x0
 			d = abs(a * x + b * y + c) / math.sqrt(a ** 2 + b ** 2)
 			print(d)
-			if (d <= 2*basesize and a != 0) or (d <= 2*basesize and a == 0 and (abs(ship.head) >= 15 or math.sqrt(ship.xspeed ** 2 + ship.yspeed ** 2) >= 1 )):
+			if (d <= basesize and a != 0) or (d <= 2*basesize and a == 0 and (abs(ship.head) >= 15 or math.sqrt(ship.xspeed ** 2 + ship.yspeed ** 2) >= 1 )):
 				print(str(x0) + ":" + str(y0) + ";" + str(x1) + ":" + str(y1))
 				banner("Crashed!")
 				engine.exit_engine()
