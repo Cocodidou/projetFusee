@@ -14,6 +14,7 @@ HEIGHT = 480
 countreac = 0 # compteur de frames du réacteur
 basesize = 10 # unité de base du vaisseau
 sundiam = 150 # diamètre du soleil
+wlength = 5000 # sol
 
 #lvl = ((-320, 120), (-280, 41), (-240, 27),
 	#(-200, 59), (-160, 25), (-120, 43), (-80, 56),
@@ -48,7 +49,7 @@ class Fusee(engine.GameObject):
 		global countreac
 		
 		if abs(self.x) <= (1/3) * WIDTH or (self.x >= (1/3) * WIDTH and self.xspeed < 0) \
-		or (self.x <= -(1/3) * WIDTH and self.xspeed > 0):
+		or (self.x <= -(1/3) * WIDTH and self.xspeed > 0) or (gnd.x >= -1 * WIDTH / 2 and self.x <= (1/3) * WIDTH) or (gnd.x <= WIDTH/2 - wlength and self.x >= -1 * (1/3) * WIDTH):
 			self.y += self.yspeed
 			self.x += self.xspeed
 		else:
@@ -178,13 +179,16 @@ def genericGroundCollisionCall(ship, gnd):
 		y1 = gnd.ground[i+1][1]
 		y = ship.y + HEIGHT /2
 		x = ship.x - gnd.x
-		if x0 < x and x < x1 and x1 != x0: # Here we are!
+		if y - 2*basesize < max(y1, y0) and x0 < x and x < x1 and x1 != x0: # Here we are!
+			# Bad hack: le test sur y ne doit pas être nécessaire
+			# mathématiquement parlant
 			a = y0 - y1
 			b = x1 - x0
 			c = (x0 - x1) * y0 + (y1 - y0) * x0
 			d = abs(a * x + b * y + c) / math.sqrt(a ** 2 + b ** 2)
 			print(d)
 			if (d <= 2*basesize and a != 0) or (d <= 2*basesize and a == 0 and (abs(ship.head) >= 15 or math.sqrt(ship.xspeed ** 2 + ship.yspeed ** 2) >= 1 )):
+				print(str(x0) + ":" + str(y0) + ";" + str(x1) + ":" + str(y1))
 				banner("Crashed!")
 				engine.exit_engine()
 			elif (d <= 2*basesize and a == 0 and abs(ship.head) < 15):
@@ -228,7 +232,7 @@ if __name__ == '__main__':
 	engine.init_screen(WIDTH, HEIGHT)
 	engine.init_engine()
 	engine.set_keyboard_handler(keyboard_cb)
-	lvl = build_random_map(4000)
+	lvl = build_random_map(wlength)
 	drawground()
 	drawfus_alt()
 	drawsun()
@@ -238,7 +242,7 @@ if __name__ == '__main__':
 	ship = Fusee()
 	gnd = Ground()
 	gnd.ground = lvl
-	gnd.x = -2000
+	gnd.x = -wlength / 2
 	sun = Sun()
 	ess = GreenBarFuel()
 	engine.add_obj(gnd)
