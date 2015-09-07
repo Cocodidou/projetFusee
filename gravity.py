@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# coding: UTF-8
 # basic moving ship
 
 import turtle
@@ -16,12 +17,7 @@ basesize = 10 # unité de base du vaisseau
 sundiam = 150 # diamètre du soleil
 wlength = 5000 # sol
 
-#lvl = ((-320, 120), (-280, 41), (-240, 27),
-	#(-200, 59), (-160, 25), (-120, 43), (-80, 56),
-	#(-40, 20), (0, 20), (40, 20), (80, 44),
-#(120, 28), (160, 66), (200, 29), (240, 64),
-#(280, 34), (320, 140), (320, 0), (-320,0) ) 
-lvl = ()
+lvl = () # le level est généré aléatoirement
 
 class Ground(engine.GameObject):
 	def __init__(self):
@@ -62,15 +58,18 @@ class Fusee(engine.GameObject):
 		self.xspeed = 0.99 * self.xspeed # histoire qu'il ne file pas à l'infini
 		self.yspeed = 0.99 * self.yspeed - 0.02 # gravité
 
-		countreac += 1 
-		if countreac > 20:
-			self.shape = "fusee"
-			self.mode = 0
+		
+		if countreac <= 20:
+			if countreac < 20:
+				countreac += 1 
+			else:
+				self.shape = "fusee"
+				self.mode = 0
 		
 		if self.fuelLevel > 0 and self.mode == 1:
 			self.fuelLevel -= 0.05
-		drawBar(self.fuelLevel)
-		ess.shape = "essence"
+			drawBar(self.fuelLevel)
+			ess.shape = "essence"
 		
 	def isoob(self):
 		if super().isoob():
@@ -98,9 +97,16 @@ class GreenBarFuel(engine.GameObject):
 class LogoEssence(engine.GameObject):
 	def __init__(self):
 		super().__init__(-280, 160, 0, 0, 'ess.gif', 'green')
-	
+
+class Enemy(engine.GameObject):
+	def __init__(self):
+		super().__init__(0,0,0,0,'enemy','red')
 
 def keyboard_cb(key):
+	# Problem on some machines: if a key stays pressed, then
+	# there is a delay between the first key event being triggered
+	# and the next ones (this is the damn repeat delay)
+	# How to get around this issue?
 	global ship
 	global countreac
 	if key == 'space' or key == 'Up':
@@ -190,9 +196,15 @@ def genericGroundCollisionCall(ship, gnd):
 			c = (x0 - x1) * y0 + (y1 - y0) * x0
 			d = abs(a * x + b * y + c) / math.sqrt(a ** 2 + b ** 2)
 			#print(d)
-			if (d <= basesize and a != 0) or (d <= 2*basesize and a == 0 and (abs(ship.head) >= 15 or math.sqrt(ship.xspeed ** 2 + ship.yspeed ** 2) >= 1 )):
+			if (d <= basesize and a != 0):
 				#print(str(x0) + ":" + str(y0) + ";" + str(x1) + ":" + str(y1))
 				banner("Crashed!")
+				engine.exit_engine()
+			elif (d <= 2*basesize and abs(a) <= 1 and abs(ship.head) >= 15):
+				banner("Crash on one reactor!")
+				engine.exit_engine()
+			elif (d <= 2*basesize and math.sqrt(ship.xspeed ** 2 + ship.yspeed ** 2) >= 1 ):
+				banner("Fast crash...")
 				engine.exit_engine()
 			elif (d <= 2*basesize and abs(a) <= 1 and abs(ship.head) < 15):
 				banner("Landed!")
