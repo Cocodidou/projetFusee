@@ -219,57 +219,38 @@ def collide_GD_SH(gnd, ship):
 
 def recursiveFractalBuild(x0, x1, y0, y1, w, rr):
 	if w == 0:
-		return [( (x0 + x1) / 2., (y0 + y1) / 2.random.randint(0,rr))]
+		return [( (x0 + x1) / 2., (y0 + y1) / 2. + random.randint(0,rr))]
 	else:
 		ymid = (y0 + y1) / 2 + random.randint(0,rr)
-		LG = recursiveFractalBuild(x0, (x0 + x1) /2., y0, ymid, w-1, rr / 2)
-		LD = recursiveFractalBuild((x0 + x1) /2., x1, ymid, y1, w-1, rr / 2)
+		LG = recursiveFractalBuild(x0, (x0 + x1) /2., y0, ymid, w-1, int(rr / 1.5))
+		LD = recursiveFractalBuild((x0 + x1) /2., x1, ymid, y1, w-1, int(rr / 1.5))
 		L = []
 		for i in LG:
 			L.append(i)
-		L.append(( (x0 + x1) / 2., ))
+		L.append(( (x0 + x1) / 2., ymid ))
 		for i in LD:
 			L.append(i)
 		return L
 
 def build_random_map(width):
-	#random.seed(os.time())
-	zero_pos = random.randint(0, width-100)
+	#zero_pos = random.randint(0, width-100) # We don't use this anymore, but for debugging purposes, it's still here.
 	
-	#num_mountains = random.randint(50, 70)
 	
-	#mountains = []
-	
-	#mountains.append((0, random.randint(20,120)))
-	#mountains.append((width, random.randint(20,120)))
-	
-	#mountains.append((zero_pos, 20))
-	#mountains.append((zero_pos + 100, 20))
-	
-	#ins = 0
-	
-	# La technique la plus pourrie du monde pour séparer des montagnes
-	# en attendant de faire ça "fractalement"
-	
-	#while ins < num_mountains:
-		#t = (random.randint(20,  width - 20), random.randint(20,120))
-		#prob = False
-		#for j in mountains:
-			#if abs(t[0] - j[0]) <= 50:
-				#prob = True
-		#if prob == False:
-			#ins += 1
-			#mountains.append(t)
-		##print(ins)
-		
-	mountains = recursiveFractalBuild(0, width, random.randint(20,120), random.randint(20,120), 6, 100)
+	y0 = random.randint(20,120)
+	y1 = random.randint(20,120)
+	mountains = recursiveFractalBuild(0, width, y0, y1, 7, 120)
+	mountains.append((0, y0))
+	mountains.append((width, y1))
 	mnt_sort = sorted(mountains, key=lambda x: x[0])
 	
-	ret = [ x if x[0] > zero_pos + 100 or x[0] < zero_pos else (x[0], 20) for x in mnt_sort ]
-	ret.append((width, 0))
-	ret.append((0, 0))
+	#ret = [ x if x[0] > zero_pos + 100 or x[0] < zero_pos else (x[0], 20) for x in mnt_sort ]
+	#ret.append((width, 0))
+	#ret.append((0, 0))
+	mnt_sort.append((width, 0))
+	mnt_sort.append((0,0))
 	
-	return tuple(ret)
+	#return tuple(ret)
+	return tuple(mnt_sort)
 
 
 if __name__ == '__main__':
