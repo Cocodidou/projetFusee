@@ -217,16 +217,17 @@ def collide_SH_GD(ship, gnd):
 def collide_GD_SH(gnd, ship):
 	genericGroundCollisionCall(ship, gnd)
 
-def recursiveFractalBuild(x0, x1, w):
+def recursiveFractalBuild(x0, x1, y0, y1, w, rr):
 	if w == 0:
-		return [( (x0 + x1) / 2., random.randint(20,120))]
+		return [( (x0 + x1) / 2., (y0 + y1) / 2.random.randint(0,rr))]
 	else:
-		LG = recursiveFractalBuild(x0, (x0 + x1) /2., w-1)
-		LD = recursiveFractalBuild((x0 + x1) /2., x1, w-1)
+		ymid = (y0 + y1) / 2 + random.randint(0,rr)
+		LG = recursiveFractalBuild(x0, (x0 + x1) /2., y0, ymid, w-1, rr / 2)
+		LD = recursiveFractalBuild((x0 + x1) /2., x1, ymid, y1, w-1, rr / 2)
 		L = []
 		for i in LG:
 			L.append(i)
-		L.append(( (x0 + x1) / 2., random.randint(20,120)))
+		L.append(( (x0 + x1) / 2., ))
 		for i in LD:
 			L.append(i)
 		return L
@@ -261,7 +262,7 @@ def build_random_map(width):
 			#mountains.append(t)
 		##print(ins)
 		
-	mountains = recursiveFractalBuild(0, width, 6)
+	mountains = recursiveFractalBuild(0, width, random.randint(20,120), random.randint(20,120), 6, 100)
 	mnt_sort = sorted(mountains, key=lambda x: x[0])
 	
 	ret = [ x if x[0] > zero_pos + 100 or x[0] < zero_pos else (x[0], 20) for x in mnt_sort ]
