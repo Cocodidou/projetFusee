@@ -188,7 +188,7 @@ def genericGroundCollisionCall(ship, gnd):
 		y0 = gnd.ground[i][1]
 		x1 = gnd.ground[i+1][0]
 		y1 = gnd.ground[i+1][1]
-		if x0 < x and x < x1 and x1 != x0 and y - 2 * basesize < max(y1, y0):
+		if x0 <= x and x <= x1 and x1 != x0 and y - 2 * basesize < max(y1, y0):
 			# BAD HACK: le test sur y ne doit pas être nécessaire
 			# mathématiquement parlant
 			a = y0 - y1
