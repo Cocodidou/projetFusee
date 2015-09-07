@@ -203,7 +203,7 @@ def genericGroundCollisionCall(ship, gnd):
 			elif (d <= 2*basesize and abs(a) <= 1 and abs(ship.head) >= 15):
 				banner("Crash on one reactor!")
 				engine.exit_engine()
-			elif (d <= 2*basesize and math.sqrt(ship.xspeed ** 2 + ship.yspeed ** 2) >= 1 ):
+			elif (d <= 2*basesize and abs(a) <= 1 and math.sqrt(ship.xspeed ** 2 + ship.yspeed ** 2) >= 1 ):
 				banner("Fast crash...")
 				engine.exit_engine()
 			elif (d <= 2*basesize and abs(a) <= 1 and abs(ship.head) < 15):
@@ -217,36 +217,51 @@ def collide_SH_GD(ship, gnd):
 def collide_GD_SH(gnd, ship):
 	genericGroundCollisionCall(ship, gnd)
 
+def recursiveFractalBuild(x0, x1, w):
+	if w == 0:
+		return [( (x0 + x1) / 2., random.randint(20,120))]
+	else:
+		LG = recursiveFractalBuild(x0, (x0 + x1) /2., w-1)
+		LD = recursiveFractalBuild((x0 + x1) /2., x1, w-1)
+		L = []
+		for i in LG:
+			L.append(i)
+		L.append(( (x0 + x1) / 2., random.randint(20,120)))
+		for i in LD:
+			L.append(i)
+		return L
+
 def build_random_map(width):
 	#random.seed(os.time())
 	zero_pos = random.randint(0, width-100)
 	
-	num_mountains = random.randint(50, 70)
+	#num_mountains = random.randint(50, 70)
 	
-	mountains = []
+	#mountains = []
 	
-	mountains.append((0, random.randint(20,120)))
-	mountains.append((width, random.randint(20,120)))
+	#mountains.append((0, random.randint(20,120)))
+	#mountains.append((width, random.randint(20,120)))
 	
-	mountains.append((zero_pos, 20))
-	mountains.append((zero_pos + 100, 20))
+	#mountains.append((zero_pos, 20))
+	#mountains.append((zero_pos + 100, 20))
 	
-	ins = 0
+	#ins = 0
 	
 	# La technique la plus pourrie du monde pour séparer des montagnes
 	# en attendant de faire ça "fractalement"
 	
-	while ins < num_mountains:
-		t = (random.randint(20,  width - 20), random.randint(20,120))
-		prob = False
-		for j in mountains:
-			if abs(t[0] - j[0]) <= 50:
-				prob = True
-		if prob == False:
-			ins += 1
-			mountains.append(t)
-		#print(ins)
-	
+	#while ins < num_mountains:
+		#t = (random.randint(20,  width - 20), random.randint(20,120))
+		#prob = False
+		#for j in mountains:
+			#if abs(t[0] - j[0]) <= 50:
+				#prob = True
+		#if prob == False:
+			#ins += 1
+			#mountains.append(t)
+		##print(ins)
+		
+	mountains = recursiveFractalBuild(0, width, 6)
 	mnt_sort = sorted(mountains, key=lambda x: x[0])
 	
 	ret = [ x if x[0] > zero_pos + 100 or x[0] < zero_pos else (x[0], 20) for x in mnt_sort ]
