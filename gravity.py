@@ -203,7 +203,8 @@ def genericGroundCollisionCall(ship, gnd):
 			elif (d <= 2*basesize and abs(a) <= 1 and abs(ship.head) >= 15):
 				banner("Crash on one reactor!")
 				engine.exit_engine()
-			elif (d <= 2*basesize and abs(a) <= 1 and math.sqrt(ship.xspeed ** 2 + ship.yspeed ** 2) >= 1 ):
+			elif (d <= 2*basesize and abs(a) <= 1 and math.sqrt(ship.xspeed ** 2 + \
+				ship.yspeed ** 2) >= 1 ):
 				banner("Fast crash...")
 				engine.exit_engine()
 			elif (d <= 2*basesize and abs(a) <= 1 and abs(ship.head) < 15):
@@ -233,11 +234,11 @@ def recursiveFractalBuild(x0, x1, y0, y1, w, rr):
 		return L
 
 def build_random_map(width):
-	#zero_pos = random.randint(0, width-100) # We don't use this anymore, but for debugging purposes, it's still here.
+	zero_pos = random.randint(0, width-100) # Where to put the flat spot.
 	
 	n = 6 # divide the total width in n equal parts
-	depth = 6 # recursion depth for fractal calculation
-	interv = 70 # maximal amplitude, divided by 1.5 at each recursion round
+	depth = 5 # recursion depth for fractal calculation
+	interv = 90 # maximal amplitude, divided by 2 at each recursion round
 
 	mountains = []
 	yprev = random.randint(20,120)
@@ -258,6 +259,7 @@ def build_random_map(width):
 	#mountains.append((width, y1))
 	mnt_sort = sorted(mountains, key=lambda x: x[0])
 	
+	# find the closest spot
 	#ret = [ x if x[0] > zero_pos + 100 or x[0] < zero_pos else (x[0], 20) for x in mnt_sort ]
 	#ret.append((width, 0))
 	#ret.append((0, 0))
