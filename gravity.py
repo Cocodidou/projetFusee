@@ -55,8 +55,8 @@ class Fusee(engine.GameObject):
 			gnd.x -= self.xspeed
 			self.y += self.yspeed
 			
-		self.xspeed = 0.99 * self.xspeed # histoire qu'il ne file pas à l'infini
-		self.yspeed = 0.99 * self.yspeed - 0.02 # gravité
+		self.xspeed = 0.99 * self.xspeed # 0.99 is the attenuation coefficient
+		self.yspeed = 0.99 * self.yspeed - 0.05 # minus the gravity
 
 		
 		if countreac <= 20:
