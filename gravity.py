@@ -260,14 +260,22 @@ def build_random_map(width):
 	mnt_sort = sorted(mountains, key=lambda x: x[0])
 	
 	# find the closest spot
-	#ret = [ x if x[0] > zero_pos + 100 or x[0] < zero_pos else (x[0], 20) for x in mnt_sort ]
-	#ret.append((width, 0))
-	#ret.append((0, 0))
-	mnt_sort.append((width, 0))
-	mnt_sort.append((0,0))
+	closest_point = mnt_sort[0]
+	closest_dist = width
+	for i in mnt_sort:
+		if abs(i[0] - zero_pos) <= closest_dist:
+			closest_point = i
+			closest_dist = abs(i[0] - zero_pos)
 	
-	#return tuple(ret)
-	return tuple(mnt_sort)
+	ret = [ x if x[0] > zero_pos + 100 or x[0] < zero_pos \
+	 else (x[0], closest_point[1]) for x in mnt_sort ] # just like a bulldozer!!
+	ret.append((width, 0))
+	ret.append((0, 0))
+	#mnt_sort.append((width, 0))
+	#mnt_sort.append((0,0))
+	
+	return tuple(ret)
+	#return tuple(mnt_sort)
 
 
 if __name__ == '__main__':
