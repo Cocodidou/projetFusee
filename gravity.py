@@ -42,6 +42,10 @@ class LogoEssence(engine.GameObject):
 	def __init__(self):
 		super().__init__(-280, 160, 0, 0, 'ess.gif', 'green')
 
+class LogoVitesse(engine.GameObject):
+	def __init__(self):
+		super().__init__(270, 160, 0, 0, 'speed.gif', 'green')
+
 class Enemy(engine.GameObject):
 	def __init__(self):
 		super().__init__(0,0,0,0,'enemy','red')
@@ -100,7 +104,6 @@ class Fusee(engine.GameObject):
 					else:
 						gndpr.x = gnd.x + wlength
 				if gnd.x >= 0 or gnd.x <= -wlength:
-					print("Switching!")
 					if gnd.gndIdentifier == 1:
 						gnd = gndbis
 					else:
@@ -349,6 +352,7 @@ if __name__ == '__main__':
 	drawFuelBar(100)
 	drawSpeedBar(0)
 	turtle.register_shape("ess.gif")
+	turtle.register_shape("speed.gif")
 
 	ship = Fusee()
 	gndpr = Ground()
@@ -374,6 +378,7 @@ if __name__ == '__main__':
 	engine.add_obj(spd)
 	
 	logo = LogoEssence()
+	vits = LogoVitesse()
 	engine.add_obj(logo)
 	
 	engine.add_obj(ship)
