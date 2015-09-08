@@ -55,6 +55,7 @@ class Ground(engine.GameObject):
 		return False
 	#ground = lvl
 	ground = ()
+	gndIdentifier = 0
 	
 
 class Sun(engine.GameObject):
@@ -70,6 +71,7 @@ class Fusee(engine.GameObject):
 	def move(self):
 		global ship
 		global countreac
+		global gnd
 		
 		if self.mode == 1 and self.fuelLevel > 0:
 			ship.xspeed += math.sin(-3.1415926535 * ship.head / 180) \
@@ -77,15 +79,31 @@ class Fusee(engine.GameObject):
 			ship.yspeed += math.cos(3.1415926535 * ship.head / 180)  \
 			* rocket_power * self.gazpower
 
-		if abs(self.x) <= (1/3) * WIDTH \
-		or (self.x >= (1/3) * WIDTH and self.xspeed < 0) \
-		or (self.x <= -(1/3) * WIDTH and self.xspeed > 0) \
-		or (gnd.x >= -1 * WIDTH / 2 and self.x <= (1/3) * WIDTH) \
-		or (gnd.x <= WIDTH/2 - wlength and self.x >= -1 * (1/3) * WIDTH):
+		# If the ship is in the last third of the screen (whichever side it is),
+		# then scroll the ground!
+		if abs(self.x) <= (1/3) * WIDTH:
 			self.y += self.yspeed
 			self.x += self.xspeed
 		else:
 			gnd.x -= self.xspeed
+			# use mod wlength!
+			if gnd.x >= -1 * WIDTH / 2 or gnd.x <= -wlength + WIDTH / 2:
+				print(gnd.x)
+				if gnd.x >= -1 * WIDTH / 2:
+					if gnd.gndIdentifier == 1:
+						gndbis.x = gnd.x + wlength
+					else:
+						gndpr.x = gnd.x + wlength
+				else:
+					if gnd.gndIdentifier == 1:
+						gndbis.x = gnd.x - wlength
+					else:
+						gndpr.x = gnd.x - wlength
+				if gnd.x >= 0 or gnd.x <= -wlength:
+					if gnd.gndIdentifier == 1:
+						gnd = gndbis
+					else:
+						gnd = gndpr					
 			self.y += self.yspeed
 			
 		self.xspeed = slowdown * self.xspeed
@@ -278,6 +296,8 @@ def build_random_map(width):
 
 	mountains = []
 	yprev = random.randint(20,120)
+	ydeb = yprev
+
 	for i in range(n):
 		y0 = random.randint(20,120)
 		#y1 = random.randint(20,120)
@@ -289,6 +309,8 @@ def build_random_map(width):
 		yprev = y0
 		for j in mnt:
 			mountains.append(j)
+
+	mountains[len(mountains)-1] = (width, ydeb) # continuity for scrolling
 
 	#mountains = recursiveFractalBuild(0, width, y0, y1, 7, 120)
 	#mountains.append((0, y0))
@@ -328,13 +350,23 @@ if __name__ == '__main__':
 	turtle.register_shape("ess.gif")
 
 	ship = Fusee()
-	gnd = Ground()
-	gnd.ground = lvl
-	gnd.x = -wlength / 2
+	gndpr = Ground()
+	gndpr.gndIdentifier = 1
+	gndpr.ground = lvl
+	gndpr.x = -wlength / 2
+	
+	gndbis = Ground()
+	gndbis.gndIdentifier = 2
+	gndbis.ground = lvl
+	gndbis.x = wlength / 2
+	
+	gnd = gndpr
+
 	sun = Sun()
 	ess = GreenBarFuel()
 	spd = SpeedBar()
-	engine.add_obj(gnd)
+	engine.add_obj(gndpr)
+	engine.add_obj(gndbis)
 	engine.add_obj(sun)
 
 	engine.add_obj(ess)
@@ -350,6 +382,7 @@ if __name__ == '__main__':
 
 	engine.register_collision(Fusee, Ground, collide_SH_GD)
 	engine.register_collision(Ground, Fusee, collide_GD_SH)
-
+	
+	
 	engine.engine()
 
