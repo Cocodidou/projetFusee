@@ -90,7 +90,7 @@ class Fusee(engine.GameObject):
 			self.x += self.xspeed
 		else:
 			gnd.x -= self.xspeed
-			# use mod wlength! (it works without... but x's get bigger...)
+
 			if gnd.x >= -1 * WIDTH / 2 or gnd.x <= -wlength + WIDTH / 2:
 				# print(gnd.x)
 				if gnd.x >= -1 * WIDTH / 2:
