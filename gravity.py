@@ -14,7 +14,6 @@ HEIGHT = 480
 
 ### GLOBALS ###
 
-countreac = 0 # compteur de frames du réacteur
 basesize = 10 # unité de base du vaisseau
 sundiam = 150 # diamètre du soleil
 wlength = 5000 # sol
@@ -74,7 +73,6 @@ class Fusee(engine.GameObject):
 		return self.head
 	def move(self):
 		global ship
-		global countreac
 		global gnd
 		
 		if self.mode == 1 and self.fuelLevel > 0:
@@ -152,7 +150,6 @@ def keyboard_cb(key):
 	# and the next ones (this is the damn repeat delay)
 	# How to get around this issue?
 	global ship
-	global countreac
 	if key == 'q' and ship.fuelLevel > 0:
 		ship.mode = 1
 		ship.gazpower += 0.05
@@ -247,7 +244,7 @@ def genericGroundCollisionCall(ship, gnd):
 		x1 = gnd.ground[i+1][0]
 		y1 = gnd.ground[i+1][1]
 		if x0 <= x and x <= x1 and x1 != x0 and y - 2 * basesize < max(y1, y0):
-			# BAD HACK: le test sur y ne doit pas être nécessaire
+			# BAD HACK: there should be no test on y
 			# mathématiquement parlant
 			a = y0 - y1
 			b = x1 - x0
