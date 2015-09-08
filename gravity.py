@@ -25,6 +25,26 @@ slowdown = 0.99 # frottement
 
 lvl = () # le level est généré aléatoirement
 
+class GreenBarFuel(engine.GameObject):
+	def __init__(self):
+		super().__init__(-300, 130, 0, 0, 'essence', 'green')
+	def heading(self):
+		return 180
+
+class GreenBarFuel(engine.GameObject):
+	def __init__(self):
+		super().__init__(-300, 130, 0, 0, 'essence', 'green')
+	def heading(self):
+		return 180
+
+class LogoEssence(engine.GameObject):
+	def __init__(self):
+		super().__init__(-280, 160, 0, 0, 'ess.gif', 'green')
+
+class Enemy(engine.GameObject):
+	def __init__(self):
+		super().__init__(0,0,0,0,'enemy','red')
+
 class Ground(engine.GameObject):
 	def __init__(self):
 		super().__init__(0, -HEIGHT/2, 0, 0, 'ground', '#8B4513')
@@ -50,6 +70,12 @@ class Fusee(engine.GameObject):
 		global ship
 		global countreac
 		
+		if self.mode == 1 and self.fuelLevel > 0:
+			ship.xspeed += math.sin(-3.1415926535 * ship.head / 180) \
+			* rocket_power * self.gazpower
+			ship.yspeed += math.cos(3.1415926535 * ship.head / 180)  \
+			* rocket_power * self.gazpower
+
 		if abs(self.x) <= (1/3) * WIDTH \
 		or (self.x >= (1/3) * WIDTH and self.xspeed < 0) \
 		or (self.x <= -(1/3) * WIDTH and self.xspeed > 0) \
@@ -65,17 +91,17 @@ class Fusee(engine.GameObject):
 		self.yspeed = slowdown * self.yspeed - gravity_coef # minus the gravity
 
 		
-		if countreac <= 20:
-			if countreac < 20:
-				countreac += 1 
-			else:
-				self.shape = "fusee"
-				self.mode = 0
+		if self.mode == 0:
+			self.shape = "fusee"
 		
 		if self.fuelLevel > 0 and self.mode == 1:
-			self.fuelLevel -= 0.05
-			drawBar(self.fuelLevel)
+			self.fuelLevel -= 0.05 * self.gazpower
+			drawFuelBar(self.fuelLevel)
 			ess.shape = "essence"
+			if self.fuelLevel <= 0:
+				self.gazpower = 0
+				self.shape = "fusee"
+				self.mode = 0
 		
 	def isoob(self):
 		if super().isoob():
@@ -93,20 +119,9 @@ class Fusee(engine.GameObject):
 	fuelLevel = 100
 	head = 0
 	mode = 0
+	gazpower = 0 # increased at each press on q, decreased at each press on s
 
-class GreenBarFuel(engine.GameObject):
-	def __init__(self):
-		super().__init__(-300, 130, 0, 0, 'essence', 'green')
-	def heading(self):
-		return 180
 
-class LogoEssence(engine.GameObject):
-	def __init__(self):
-		super().__init__(-280, 160, 0, 0, 'ess.gif', 'green')
-
-class Enemy(engine.GameObject):
-	def __init__(self):
-		super().__init__(0,0,0,0,'enemy','red')
 
 def keyboard_cb(key):
 	# Problem on some machines: if a key stays pressed, then
@@ -115,15 +130,16 @@ def keyboard_cb(key):
 	# How to get around this issue?
 	global ship
 	global countreac
-	if key == 'space' or key == 'Up':
-		if ship.fuelLevel > 0:
-			ship.mode = 1
-			ship.xspeed += math.sin(-3.1415926535 * ship.head / 180) \
-			* rocket_power
-			ship.yspeed += math.cos(3.1415926535 * ship.head / 180)  \
-			* rocket_power
-			ship.shape = "fusee reac"
-			countreac = 0
+	if key == 'q' and ship.fuelLevel > 0:
+		ship.mode = 1
+		ship.gazpower += 0.05
+		ship.shape = "fusee reac"
+	elif key == 's':
+		ship.gazpower -= 0.05
+		if ship.gazpower <= 0:
+			ship.gazpower = 0
+			ship.mode = 0
+			ship.shape = "fusee"
 	elif key == 'Escape':
 		#print("Au revoir...")
 		engine.exit_engine()
@@ -151,7 +167,7 @@ def drawfus_alt():
 
 def banner(s):
 	turtle.home()
-	turtle.color('black')
+	turtle.color('white')
 	turtle.write(s, True, align='center', font=('Arial', 48, 'italic'))
 	time.sleep(3)
 	#turtle.undo()
@@ -172,11 +188,18 @@ def drawground():
 	s.addcomponent(lvl, "#8B4513", "#8B4513")
 	turtle.register_shape('ground', s)
 
-def drawBar(flevel):
+def drawFuelBar(flevel):
 	s = turtle.Shape("compound")
 	rect = ((flevel, 0), (flevel, 10), (0,10), (0,0))
 	s.addcomponent(rect, "#008000", "#008000")
 	turtle.register_shape('essence',s)
+
+def drawSpeedBar(level):
+	s = turtle.Shape("compound")
+	rect = ((level, 0), (level, 10), (0,10), (0,0))
+	s.addcomponent(rect, "#FF3000", "#FF3000")
+	turtle.register_shape('essence',s)
+
 
 def collision_cb_SL(sun, lander):
 	if math.sqrt( (lander.x - sun.x) ** 2 + (lander.y - sun.y) ** 2 ) <= sundiam/2 + 2*basesize :
@@ -295,7 +318,7 @@ if __name__ == '__main__':
 	drawground()
 	drawfus_alt()
 	drawsun()
-	drawBar(100)
+	drawFuelBar(100)
 	turtle.register_shape("ess.gif")
 
 	ship = Fusee()
