@@ -12,10 +12,16 @@ import os
 WIDTH = 640
 HEIGHT = 480
 
+### GLOBALS ###
+
 countreac = 0 # compteur de frames du réacteur
 basesize = 10 # unité de base du vaisseau
 sundiam = 150 # diamètre du soleil
 wlength = 5000 # sol
+
+rocket_power = 0.3 # pêche des moteurs
+gravity_coef = 0.03 # attraction lunaire
+slowdown = 0.99 # frottement
 
 lvl = () # le level est généré aléatoirement
 
@@ -55,8 +61,8 @@ class Fusee(engine.GameObject):
 			gnd.x -= self.xspeed
 			self.y += self.yspeed
 			
-		self.xspeed = 0.99 * self.xspeed # 0.99 is the attenuation coefficient
-		self.yspeed = 0.99 * self.yspeed - 0.05 # minus the gravity
+		self.xspeed = slowdown * self.xspeed # 0.99 is the attenuation coefficient
+		self.yspeed = slowdown * self.yspeed - gravity_coef # minus the gravity
 
 		
 		if countreac <= 20:
@@ -112,8 +118,10 @@ def keyboard_cb(key):
 	if key == 'space' or key == 'Up':
 		if ship.fuelLevel > 0:
 			ship.mode = 1
-			ship.xspeed +=  math.sin(-3.1415926535 * ship.head / 180) * 0.2
-			ship.yspeed += math.cos(3.1415926535 * ship.head / 180) * 0.2
+			ship.xspeed += math.sin(-3.1415926535 * ship.head / 180) \
+			* rocket_power
+			ship.yspeed += math.cos(3.1415926535 * ship.head / 180)  \
+			* rocket_power
 			ship.shape = "fusee reac"
 			countreac = 0
 	elif key == 'Escape':
