@@ -86,24 +86,25 @@ class Fusee(engine.GameObject):
 			self.x += self.xspeed
 		else:
 			gnd.x -= self.xspeed
-			# use mod wlength!
+			# use mod wlength! (it works without... but x's get bigger...)
 			if gnd.x >= -1 * WIDTH / 2 or gnd.x <= -wlength + WIDTH / 2:
-				print(gnd.x)
+				# print(gnd.x)
 				if gnd.x >= -1 * WIDTH / 2:
-					if gnd.gndIdentifier == 1:
-						gndbis.x = gnd.x + wlength
-					else:
-						gndpr.x = gnd.x + wlength
-				else:
 					if gnd.gndIdentifier == 1:
 						gndbis.x = gnd.x - wlength
 					else:
 						gndpr.x = gnd.x - wlength
+				else:
+					if gnd.gndIdentifier == 1:
+						gndbis.x = gnd.x + wlength
+					else:
+						gndpr.x = gnd.x + wlength
 				if gnd.x >= 0 or gnd.x <= -wlength:
+					print("Switching!")
 					if gnd.gndIdentifier == 1:
 						gnd = gndbis
 					else:
-						gnd = gndpr					
+						gnd = gndpr		
 			self.y += self.yspeed
 			
 		self.xspeed = slowdown * self.xspeed
