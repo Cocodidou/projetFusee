@@ -22,6 +22,7 @@ wlength = 5000 # sol
 rocket_power = 0.3 # pêche des moteurs
 gravity_coef = 0.03 # attraction lunaire
 slowdown = 0.99 # frottement
+fuel_consumption = 0.2  # consommation d'essence
 
 lvl = () # le level est généré aléatoirement
 
@@ -95,7 +96,7 @@ class Fusee(engine.GameObject):
 			self.shape = "fusee"
 		
 		if self.fuelLevel > 0 and self.mode == 1:
-			self.fuelLevel -= 0.5 * self.gazpower
+			self.fuelLevel -= fuel_consumption * self.gazpower
 			drawFuelBar(self.fuelLevel)
 			ess.shape = "essence"
 			if self.fuelLevel <= 0:
