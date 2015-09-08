@@ -235,12 +235,27 @@ def recursiveFractalBuild(x0, x1, y0, y1, w, rr):
 def build_random_map(width):
 	#zero_pos = random.randint(0, width-100) # We don't use this anymore, but for debugging purposes, it's still here.
 	
-	
-	y0 = random.randint(20,120)
-	y1 = random.randint(20,120)
-	mountains = recursiveFractalBuild(0, width, y0, y1, 7, 120)
-	mountains.append((0, y0))
-	mountains.append((width, y1))
+	n = 6 # divide the total width in n equal parts
+	depth = 6 # recursion depth for fractal calculation
+	interv = 70 # maximal amplitude, divided by 1.5 at each recursion round
+
+	mountains = []
+	yprev = random.randint(20,120)
+	for i in range(n):
+		y0 = random.randint(20,120)
+		#y1 = random.randint(20,120)
+		mnt = recursiveFractalBuild(int(i * width / n), int((i + 1) * width / n), \
+		yprev, y0, depth, interv)
+		
+		mnt.append((int(i * width / n), yprev))
+		mnt.append((int((i + 1) * width / n), y0))
+		yprev = y0
+		for j in mnt:
+			mountains.append(j)
+
+	#mountains = recursiveFractalBuild(0, width, y0, y1, 7, 120)
+	#mountains.append((0, y0))
+	#mountains.append((width, y1))
 	mnt_sort = sorted(mountains, key=lambda x: x[0])
 	
 	#ret = [ x if x[0] > zero_pos + 100 or x[0] < zero_pos else (x[0], 20) for x in mnt_sort ]
