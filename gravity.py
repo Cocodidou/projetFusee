@@ -31,9 +31,9 @@ class GreenBarFuel(engine.GameObject):
 	def heading(self):
 		return 180
 
-class GreenBarFuel(engine.GameObject):
+class SpeedBar(engine.GameObject):
 	def __init__(self):
-		super().__init__(-300, 130, 0, 0, 'essence', 'green')
+		super().__init__(300, 130, 0, 0, 'speed', 'red')
 	def heading(self):
 		return 180
 
@@ -87,15 +87,15 @@ class Fusee(engine.GameObject):
 			gnd.x -= self.xspeed
 			self.y += self.yspeed
 			
-		self.xspeed = slowdown * self.xspeed # 0.99 is the attenuation coefficient
-		self.yspeed = slowdown * self.yspeed - gravity_coef # minus the gravity
+		self.xspeed = slowdown * self.xspeed
+		self.yspeed = slowdown * self.yspeed - gravity_coef
 
 		
 		if self.mode == 0:
 			self.shape = "fusee"
 		
 		if self.fuelLevel > 0 and self.mode == 1:
-			self.fuelLevel -= 0.05 * self.gazpower
+			self.fuelLevel -= 0.5 * self.gazpower
 			drawFuelBar(self.fuelLevel)
 			ess.shape = "essence"
 			if self.fuelLevel <= 0:
@@ -133,9 +133,13 @@ def keyboard_cb(key):
 	if key == 'q' and ship.fuelLevel > 0:
 		ship.mode = 1
 		ship.gazpower += 0.05
+		drawSpeedBar(100 * ship.gazpower)
+		spd.shape = "speed"
 		ship.shape = "fusee reac"
 	elif key == 's':
 		ship.gazpower -= 0.05
+		drawSpeedBar(100 * ship.gazpower)
+		spd.shape = "speed"
 		if ship.gazpower <= 0:
 			ship.gazpower = 0
 			ship.mode = 0
@@ -198,7 +202,7 @@ def drawSpeedBar(level):
 	s = turtle.Shape("compound")
 	rect = ((level, 0), (level, 10), (0,10), (0,0))
 	s.addcomponent(rect, "#FF3000", "#FF3000")
-	turtle.register_shape('essence',s)
+	turtle.register_shape('speed',s)
 
 
 def collision_cb_SL(sun, lander):
@@ -319,6 +323,7 @@ if __name__ == '__main__':
 	drawfus_alt()
 	drawsun()
 	drawFuelBar(100)
+	drawSpeedBar(0)
 	turtle.register_shape("ess.gif")
 
 	ship = Fusee()
@@ -327,10 +332,12 @@ if __name__ == '__main__':
 	gnd.x = -wlength / 2
 	sun = Sun()
 	ess = GreenBarFuel()
+	spd = SpeedBar()
 	engine.add_obj(gnd)
 	engine.add_obj(sun)
 
 	engine.add_obj(ess)
+	engine.add_obj(spd)
 	
 	logo = LogoEssence()
 	engine.add_obj(logo)
