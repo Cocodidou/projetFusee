@@ -138,13 +138,13 @@ def drawfus_alt():
 	
 	ship = turtle.Shape("compound")
 	mesh = ((1*B,0), (2*B, 2*B), (-2*B,0), (2*B, -2*B), (1*B,0) ) 
-	ship.addcomponent(mesh, "black", "black")
+	ship.addcomponent(mesh, "#555555", "#555555")
 	
 	redship = turtle.Shape("compound")
 	reaction = ((1.5*B, 1*B), (2*B, 0), (1.5*B, -1*B), (1*B, 0))
 	
-	redship.addcomponent(mesh, "black", "black")
-	redship.addcomponent(reaction, "red", "red") # réacteur, (c) Antonin
+	redship.addcomponent(mesh, "#555555", "#555555")
+	redship.addcomponent(reaction, "yellow", "yellow") # réacteur, (c) Antonin
 	
 	turtle.register_shape('fusee', ship)
 	turtle.register_shape('fusee reac', redship)
@@ -291,6 +291,7 @@ if __name__ == '__main__':
 	engine.init_engine()
 	engine.set_keyboard_handler(keyboard_cb)
 	lvl = build_random_map(wlength)
+	turtle.bgcolor("#000044")
 	drawground()
 	drawfus_alt()
 	drawsun()
@@ -304,7 +305,7 @@ if __name__ == '__main__':
 	sun = Sun()
 	ess = GreenBarFuel()
 	engine.add_obj(gnd)
-	engine.add_obj(sun)	
+	engine.add_obj(sun)
 
 	engine.add_obj(ess)
 	
