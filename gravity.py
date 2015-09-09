@@ -9,8 +9,8 @@ import math
 import time
 import os
 
-WIDTH = 640
-HEIGHT = 480
+WIDTH = 1024
+HEIGHT = 768
 
 ### GLOBALS ###
 
@@ -27,23 +27,23 @@ lvl = () # le level est généré aléatoirement
 
 class GreenBarFuel(engine.GameObject):
 	def __init__(self):
-		super().__init__(-300, 130, 0, 0, 'essence', 'green')
+		super().__init__(-WIDTH/2+20, 130, 0, 0, 'essence', 'green')
 	def heading(self):
 		return 180
 
 class SpeedBar(engine.GameObject):
 	def __init__(self):
-		super().__init__(300, 130, 0, 0, 'speed', 'red')
+		super().__init__(WIDTH/2-20, 130, 0, 0, 'speed', 'red')
 	def heading(self):
 		return 180
 
 class LogoEssence(engine.GameObject):
 	def __init__(self):
-		super().__init__(-280, 160, 0, 0, 'ess.gif', 'green')
+		super().__init__(-WIDTH/2+40, 160, 0, 0, 'ess.gif', 'green')
 
 class LogoVitesse(engine.GameObject):
 	def __init__(self):
-		super().__init__(270, 160, 0, 0, 'speed.gif', 'green')
+		super().__init__(WIDTH/2-50, 160, 0, 0, 'speed.gif', 'green')
 
 class Enemy(engine.GameObject):
 	def __init__(self):
@@ -170,9 +170,9 @@ def keyboard_cb(key):
 		#print("Au revoir...")
 		engine.exit_engine()
 	elif key == 'Right':
-		ship.head -= 2
+		ship.head -= 5
 	elif key == 'Left':
-		ship.head += 2
+		ship.head += 5
 
 def drawfus_alt():
 	global basesize
@@ -261,7 +261,7 @@ def genericGroundCollisionCall(ship, gnd):
 				banner("Crash on one reactor!")
 				engine.exit_engine()
 			elif (d <= 2*basesize and abs(a) <= 1 and math.sqrt(ship.xspeed ** 2 + \
-				ship.yspeed ** 2) >= 1 ):
+				ship.yspeed ** 2) >= 2 ):
 				banner("Fast crash...")
 				engine.exit_engine()
 			elif (d <= 2*basesize and abs(a) <= 1 and abs(ship.head) < 15):
