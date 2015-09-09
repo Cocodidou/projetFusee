@@ -74,7 +74,7 @@ class Enemy(engine.GameObject):
 		self.yspeed = math.cos(3.1415926535 * (self.head - 90)/ 180)  \
 		* rocket_power
 		
-		if random.randint(0,100) >= 70:
+		if random.randint(0,100) >= 95:
 			shoot(self)
 	
 	xspeed = 0
