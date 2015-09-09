@@ -235,6 +235,15 @@ def drawenemy():
 	enemyship.addcomponent(right_antenna,"red","green")
 	turtle.register_shape("enemy", enemyship)
 
+def drawBullet():
+	turtle.home()
+	turtle.setpos(0,-5)
+	turtle.begin_poly()
+	turtle.circle(5, None, None)
+	turtle.end_poly()
+	circ = turtle.get_poly()
+	turtle.register_shape('bullet',circ)
+
 def banner(s):
 	turtle.home()
 	turtle.color('white')
