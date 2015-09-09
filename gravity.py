@@ -48,14 +48,19 @@ class LogoVitesse(engine.GameObject):
 class Enemy(engine.GameObject):
 	def __init__(self):
 		super().__init__(0,0,0,0,'enemy','red')
+	
 	def heading(self):
 		return self.head
+	
+	def isoob(self):
+		return False
+	
 	def move(self):
 		self.y0 += self.yspeed
 		self.x0 += self.xspeed
 		
-		self.x = gnd.x + self.x0
-		self.y = gnd.y + self.y0
+		self.x = (gnd.x + wlength/2) + self.x0
+		self.y = self.y0
 		
 		if random.randint(0,1) == 1:
 			self.head += random.randint(-10,10)
@@ -422,8 +427,8 @@ if __name__ == '__main__':
 	
 	engine.add_obj(ship)
 	
-	sampleEnemy = Enemy()
-	engine.add_obj(sampleEnemy)
+	#sampleEnemy = Enemy()
+	#engine.add_obj(sampleEnemy)
 	
 	engine.register_collision(Sun, Fusee, collision_cb_SL)
 	engine.register_collision(Fusee, Sun, collision_cb_LS)
