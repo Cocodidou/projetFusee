@@ -126,9 +126,9 @@ class Fusee(engine.GameObject):
 
 		# If the ship is in the last third of the screen (whichever side it is),
 		# then scroll the ground!
-		if abs(self.x) <= (1/3) * WIDTH \
-		or (self.x >= (1/3) * WIDTH and self.xspeed < 0) \
-		or (self.x <= -(1/3) * WIDTH and self.xspeed > 0):
+		if abs(self.x) <= (1/6) * WIDTH \
+		or (self.x >= (1/6) * WIDTH and self.xspeed < 0) \
+		or (self.x <= -(1/6) * WIDTH and self.xspeed > 0):
 			self.y += self.yspeed
 			self.x += self.xspeed
 		else:
@@ -311,6 +311,14 @@ def collision_enemy(en, sh):
 		banner("Crash against enemy")
 		engine.exit_engine()
 
+def collision_en_bl(en, bl):
+	if math.sqrt( (bl.x - en.x) ** 2 + (bl.y - en.y) ** 2 ) <= 4 * basesize:
+		engine.del_obj(en)
+		engine.del_obj(bl)
+
+def collision_bl_en(bl, en):
+	collision_en_bl(en, bl)
+
 def collision_cb_LS(lander, sun):
     collision_cb_SL(sun, lander)
 
@@ -482,6 +490,8 @@ if __name__ == '__main__':
 	engine.register_collision(Ground, Fusee, collide_GD_SH)
 	
 	engine.register_collision(Fusee, Enemy, collision_enemy)
+
+	engine.register_collision(Enemy,Bullet,collision_en_bl)
 	
 	
 	engine.engine()
