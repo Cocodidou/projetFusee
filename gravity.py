@@ -83,7 +83,9 @@ class Fusee(engine.GameObject):
 
 		# If the ship is in the last third of the screen (whichever side it is),
 		# then scroll the ground!
-		if abs(self.x) <= (1/3) * WIDTH:
+		if abs(self.x) <= (1/3) * WIDTH \
+		or (self.x >= (1/3) * WIDTH and self.xspeed < 0) \
+		or (self.x <= -(1/3) * WIDTH and self.xspeed > 0):
 			self.y += self.yspeed
 			self.x += self.xspeed
 		else:
