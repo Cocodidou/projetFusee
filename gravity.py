@@ -430,6 +430,15 @@ if __name__ == '__main__':
 	#sampleEnemy = Enemy()
 	#engine.add_obj(sampleEnemy)
 	
+	enemies = []
+	nb_enemies = random.randint(10,50)
+	for i in range(nb_enemies):
+		en = Enemy()
+		en.x = random.randint(-wlength/2, wlength/2)
+		en.y = random.randint(-HEIGHT/2, HEIGHT/2)
+		engine.add_obj(en)
+		enemies.append(en)
+	
 	engine.register_collision(Sun, Fusee, collision_cb_SL)
 	engine.register_collision(Fusee, Sun, collision_cb_LS)
 
