@@ -66,7 +66,7 @@ class Enemy(engine.GameObject):
 		if self.y != ship.y:
 			re = math.sqrt((self.y - ship.y) ** 2 + (self.x - ship.x) ** 2)
 			self.head = 180 / 3.1415926535 * 2 * \
-			math.atan((self.y - ship.y) / ( (self.x - ship.x) + re)) + 180 
+			math.atan((self.y - ship.y) / ( (self.x - ship.x) + re)) + 90 
 			
 		
 		self.xspeed = math.sin(-3.1415926535 * (self.head - 90)/ 180) \
@@ -256,9 +256,10 @@ def drawenemy():
 	global basesize
 	B = 2*basesize
 	enemyship = turtle.Shape("compound")
-	enemy_mesh = ((-1*B,0),(-0.33*B,-1*B),(0.33*B,-1*B),(1*B,0),(0,1*B))
-	left_antenna = ((-0.66*B,0.33*B),(-B,B),(-0.33*B,0.66*B))
-	right_antenna = ((0.66*B,0.33*B),(B,B),(0.33*B,0.66*B))
+	#enemy_mesh = ((-1*B,0),(-0.33*B,-1*B),(0.33*B,-1*B),(1*B,0),(0,1*B))
+	enemy_mesh = ((0, -1*B), (1*B, -0.33*B), (1*B, 0.33*B), (0, 1*B), (-1*B, 0))
+	left_antenna = ((-0.33*B,-0.66*B),(-B,-B),(-0.66*B,-0.33*B))
+	right_antenna = ((-0.33*B,0.66*B),(-B,B),(-0.66*B,0.33*B))
 	
 	enemyship.addcomponent(enemy_mesh,"red","green")
 	enemyship.addcomponent(left_antenna,"red","green")
@@ -326,7 +327,7 @@ def collision_en_bl(en, bl):
 		engine.del_obj(bl)
 
 def collision_sh_bl(sh, bl):
-	if math.sqrt( (bl.x - sh.x) ** 2 + (sh.y - en.y) ** 2 ) <= 4 * basesize:
+	if math.sqrt( (bl.x - sh.x) ** 2 + (sh.y - bl.y) ** 2 ) <= 2 * basesize:
 		banner("Killed by bullet")
 		engine.exit_engine()
 
@@ -488,7 +489,7 @@ if __name__ == '__main__':
 	
 	engine.add_obj(ship)
 	
-	nb_enemies = random.randint(10,30)
+	nb_enemies = random.randint(10,20)
 	for i in range(nb_enemies):
 		en = Enemy()
 		en.x0 = random.randint(-wlength/2, wlength/2)
