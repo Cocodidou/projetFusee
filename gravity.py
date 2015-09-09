@@ -62,8 +62,11 @@ class Enemy(engine.GameObject):
 		self.x = (gnd.x + wlength/2) + self.x0
 		self.y = self.y0
 		
-		if random.randint(0,1) == 1:
-			self.head += random.randint(-10,10)
+		#if random.randint(0,1) == 1:
+		#	self.head += random.randint(-10,10)
+		
+		if self.y != ship.y:
+			self.head = - 180 / 3.1415926535 * math.atan((self.x - ship.x) / (self.y - ship.y)) - 90
 		
 		self.xspeed = math.sin(-3.1415926535 * (self.head - 90)/ 180) \
 		* rocket_power
