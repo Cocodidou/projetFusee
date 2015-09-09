@@ -73,6 +73,9 @@ class Enemy(engine.GameObject):
 		* rocket_power
 		self.yspeed = math.cos(3.1415926535 * (self.head - 90)/ 180)  \
 		* rocket_power
+		
+		if random.randint(0,100) >= 70:
+			shoot(self)
 	
 	xspeed = 0
 	yspeed = 0
@@ -81,8 +84,11 @@ class Enemy(engine.GameObject):
 	head = 90
 
 class Bullet(engine.GameObject):
-	def __init__(self):
-		super().__init__(0,0,0,0,'bullet','red')
+	def __init__(self, xs, ys, x, y, hd):
+		self.xspeed = xs
+		self.yspeed = ys
+		self.head = hd
+		super().__init__(x,y,0,0,'bullet','red')
 	def heading(self):
 		return self.head
 	def move(self):
@@ -179,6 +185,8 @@ class Fusee(engine.GameObject):
 	
 	def getFuelLevel(self):
 		return fuelLevel
+
+
 	
 	xspeed = 0
 	yspeed = 0
@@ -187,7 +195,15 @@ class Fusee(engine.GameObject):
 	mode = 0
 	gazpower = 0 # increased at each press on q, decreased at each press on s
 
-
+def shoot(sender):
+	bh = sender.heading()
+	abs_spd = math.sqrt(sender.xspeed ** 2 + sender.yspeed ** 2) + 4
+	bxs = abs_spd * math.sin(-3.1415926535 * bh / 180)
+	bys = abs_spd * math.cos(-3.1415926535 * bh / 180)
+	bx = sender.x + 4 * basesize * math.sin(-3.1415926535 * sender.heading() / 180)
+	by = sender.y + 4 * basesize * math.cos(-3.1415926535 * sender.heading() / 180)
+	bullet = Bullet(bxs, bys, bx, by, bh)
+	engine.add_obj(bullet)
 
 def keyboard_cb(key):
 	# Problem on some machines: if a key stays pressed, then
@@ -217,14 +233,7 @@ def keyboard_cb(key):
 	elif key == 'Left':
 		ship.head += 5
 	elif key == "space":
-		bullet = Bullet()
-		bullet.head = ship.heading()
-		abs_spd = math.sqrt(ship.xspeed ** 2 + ship.yspeed ** 2) + 4
-		bullet.xspeed = abs_spd * math.sin(-3.1415926535 * bullet.head / 180)
-		bullet.yspeed = abs_spd * math.cos(-3.1415926535 * bullet.head / 180)
-		bullet.x = ship.x
-		bullet.y = ship.y
-		engine.add_obj(bullet)
+		shoot(ship)
 
 def drawship():
 	global basesize
@@ -315,6 +324,14 @@ def collision_en_bl(en, bl):
 	if math.sqrt( (bl.x - en.x) ** 2 + (bl.y - en.y) ** 2 ) <= 4 * basesize:
 		engine.del_obj(en)
 		engine.del_obj(bl)
+
+def collision_sh_bl(sh, bl):
+	if math.sqrt( (bl.x - sh.x) ** 2 + (sh.y - en.y) ** 2 ) <= 4 * basesize:
+		banner("Killed by bullet")
+		engine.exit_engine()
+
+def collision_bl_sh(bl, sh):
+	collision_sh_bl(sh, bl)
 
 def collision_bl_en(bl, en):
 	collision_en_bl(en, bl)
@@ -471,17 +488,12 @@ if __name__ == '__main__':
 	
 	engine.add_obj(ship)
 	
-	#sampleEnemy = Enemy()
-	#engine.add_obj(sampleEnemy)
-	
-	enemies = []
-	nb_enemies = random.randint(0,10)
+	nb_enemies = random.randint(10,30)
 	for i in range(nb_enemies):
 		en = Enemy()
 		en.x0 = random.randint(-wlength/2, wlength/2)
 		en.y0 = random.randint(-HEIGHT/2, HEIGHT/2)
 		engine.add_obj(en)
-		enemies.append(en)
 	
 	engine.register_collision(Sun, Fusee, collision_cb_SL)
 	engine.register_collision(Fusee, Sun, collision_cb_LS)
@@ -492,6 +504,8 @@ if __name__ == '__main__':
 	engine.register_collision(Fusee, Enemy, collision_enemy)
 
 	engine.register_collision(Enemy,Bullet,collision_en_bl)
+	engine.register_collision(Fusee, Bullet, collision_sh_bl)
+	engine.register_collision(Bullet, Fusee, collision_bl_sh)
 	
 	
 	engine.engine()
