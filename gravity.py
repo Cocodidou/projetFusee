@@ -276,6 +276,11 @@ def collision_cb_SL(sun, lander):
 		banner("Sunned!")
 		engine.exit_engine()
 
+def collision_enemy(en, sh):
+	if math.sqrt( (sh.x - en.x) ** 2 + (sh.y - en.y) ** 2 ) <= 4 * basesize:
+		banner("Crash against enemy")
+		engine.exit_engine()
+
 def collision_cb_LS(lander, sun):
     collision_cb_SL(sun, lander)
 
@@ -299,7 +304,7 @@ def genericGroundCollisionCall(ship, gnd):
 			#print(d)
 			if (d <= basesize and a != 0):
 				#print(str(x0) + ":" + str(y0) + ";" + str(x1) + ":" + str(y1))
-				banner("Crashed!")
+				banner("Andreas Lubitz!")
 				engine.exit_engine()
 			elif (d <= 2*basesize and abs(a) <= 1 and abs(ship.head) >= 15):
 				banner("Crash on one reactor!")
@@ -411,12 +416,12 @@ if __name__ == '__main__':
 	
 	gnd = gndpr
 
-	sun = Sun()
+	sol = Sun()
 	ess = GreenBarFuel()
 	spd = SpeedBar()
 	engine.add_obj(gndpr)
 	engine.add_obj(gndbis)
-	engine.add_obj(sun)
+	engine.add_obj(sol)
 
 	engine.add_obj(ess)
 	engine.add_obj(spd)
@@ -431,11 +436,11 @@ if __name__ == '__main__':
 	#engine.add_obj(sampleEnemy)
 	
 	enemies = []
-	nb_enemies = random.randint(10,50)
+	nb_enemies = random.randint(0,10)
 	for i in range(nb_enemies):
 		en = Enemy()
-		en.x = random.randint(-wlength/2, wlength/2)
-		en.y = random.randint(-HEIGHT/2, HEIGHT/2)
+		en.x0 = random.randint(-wlength/2, wlength/2)
+		en.y0 = random.randint(-HEIGHT/2, HEIGHT/2)
 		engine.add_obj(en)
 		enemies.append(en)
 	
@@ -444,6 +449,8 @@ if __name__ == '__main__':
 
 	engine.register_collision(Fusee, Ground, collide_SH_GD)
 	engine.register_collision(Ground, Fusee, collide_GD_SH)
+	
+	engine.register_collision(Fusee, Enemy, collision_enemy)
 	
 	
 	engine.engine()
