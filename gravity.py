@@ -79,6 +79,14 @@ class Enemy(engine.GameObject):
 class Bullet(engine.GameObject):
 	def __init__(self):
 		super().__init__(0,0,0,0,'bullet','red')
+	def heading(self):
+		return self.head
+	def move(self):
+		self.x += self.xspeed
+		self.y += self.yspeed
+	head = 0
+	xspeed = 0
+	yspeed = 0
 
 
 class Ground(engine.GameObject):
@@ -204,6 +212,15 @@ def keyboard_cb(key):
 		ship.head -= 5
 	elif key == 'Left':
 		ship.head += 5
+	elif key == "space":
+		bullet = Bullet()
+		bullet.head = ship.heading()
+		abs_spd = math.sqrt(ship.xspeed ** 2 + ship.yspeed ** 2) + 2
+		bullet.xspeed = abs_spd * math.sin(-3.1415926535 * bullet.head / 180)
+		bullet.yspeed = abs_spd * math.cos(-3.1415926535 * bullet.head / 180)
+		bullet.x = ship.x
+		bullet.y = ship.y
+		engine.add_obj(bullet)
 
 def drawship():
 	global basesize
@@ -235,7 +252,7 @@ def drawenemy():
 	enemyship.addcomponent(right_antenna,"red","green")
 	turtle.register_shape("enemy", enemyship)
 
-def drawBullet():
+def drawbullet():
 	turtle.home()
 	turtle.setpos(0,-5)
 	turtle.begin_poly()
@@ -407,6 +424,7 @@ if __name__ == '__main__':
 	drawship()
 	drawsun()
 	drawenemy()
+	drawbullet()
 	drawFuelBar(100)
 	drawSpeedBar(0)
 	turtle.register_shape("ess.gif")
