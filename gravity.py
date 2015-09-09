@@ -21,7 +21,7 @@ wlength = 5000 # sol
 rocket_power = 0.3 # pêche des moteurs
 gravity_coef = 0.03 # attraction lunaire
 slowdown = 0.99 # frottement
-fuel_consumption = 0.2  # consommation d'essence
+fuel_consumption = 0.1  # consommation d'essence
 
 lvl = () # le level est généré aléatoirement
 
@@ -219,7 +219,7 @@ def keyboard_cb(key):
 	elif key == "space":
 		bullet = Bullet()
 		bullet.head = ship.heading()
-		abs_spd = math.sqrt(ship.xspeed ** 2 + ship.yspeed ** 2) + 2
+		abs_spd = math.sqrt(ship.xspeed ** 2 + ship.yspeed ** 2) + 4
 		bullet.xspeed = abs_spd * math.sin(-3.1415926535 * bullet.head / 180)
 		bullet.yspeed = abs_spd * math.cos(-3.1415926535 * bullet.head / 180)
 		bullet.x = ship.x
