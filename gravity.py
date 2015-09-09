@@ -48,6 +48,33 @@ class LogoVitesse(engine.GameObject):
 class Enemy(engine.GameObject):
 	def __init__(self):
 		super().__init__(0,0,0,0,'enemy','red')
+	def heading(self):
+		return self.head
+	def move(self):
+		self.y0 += self.yspeed
+		self.x0 += self.xspeed
+		
+		self.x = gnd.x + self.x0
+		self.y = gnd.y + self.y0
+		
+		if random.randint(0,1) == 1:
+			self.head += random.randint(-10,10)
+		
+		self.xspeed = math.sin(-3.1415926535 * (self.head - 90)/ 180) \
+		* rocket_power
+		self.yspeed = math.cos(3.1415926535 * (self.head - 90)/ 180)  \
+		* rocket_power
+	
+	xspeed = 0
+	yspeed = 0
+	x0 = 0
+	y0 = 0
+	head = 90
+
+class Bullet(engine.GameObject):
+	def __init__(self):
+		super().__init__(0,0,0,0,'bullet','red')
+
 
 class Ground(engine.GameObject):
 	def __init__(self):
@@ -72,13 +99,12 @@ class Fusee(engine.GameObject):
 	def heading(self):
 		return self.head
 	def move(self):
-		global ship
 		global gnd
 		
 		if self.mode == 1 and self.fuelLevel > 0:
-			ship.xspeed += math.sin(-3.1415926535 * ship.head / 180) \
+			self.xspeed += math.sin(-3.1415926535 * self.head / 180) \
 			* rocket_power * self.gazpower
-			ship.yspeed += math.cos(3.1415926535 * ship.head / 180)  \
+			self.yspeed += math.cos(3.1415926535 * self.head / 180)  \
 			* rocket_power * self.gazpower
 
 		# If the ship is in the last third of the screen (whichever side it is),
@@ -174,7 +200,7 @@ def keyboard_cb(key):
 	elif key == 'Left':
 		ship.head += 5
 
-def drawfus_alt():
+def drawship():
 	global basesize
 	B = basesize
 	
@@ -190,6 +216,19 @@ def drawfus_alt():
 	
 	turtle.register_shape('fusee', ship)
 	turtle.register_shape('fusee reac', redship)
+
+def drawenemy():
+	global basesize
+	B = 2*basesize
+	enemyship = turtle.Shape("compound")
+	enemy_mesh = ((-1*B,0),(-0.33*B,-1*B),(0.33*B,-1*B),(1*B,0),(0,1*B))
+	left_antenna = ((-0.66*B,0.33*B),(-B,B),(-0.33*B,0.66*B))
+	right_antenna = ((0.66*B,0.33*B),(B,B),(0.33*B,0.66*B))
+	
+	enemyship.addcomponent(enemy_mesh,"red","green")
+	enemyship.addcomponent(left_antenna,"red","green")
+	enemyship.addcomponent(right_antenna,"red","green")
+	turtle.register_shape("enemy", enemyship)
 
 def banner(s):
 	turtle.home()
@@ -346,8 +385,9 @@ if __name__ == '__main__':
 	lvl = build_random_map(wlength)
 	turtle.bgcolor("#000044")
 	drawground()
-	drawfus_alt()
+	drawship()
 	drawsun()
+	drawenemy()
 	drawFuelBar(100)
 	drawSpeedBar(0)
 	turtle.register_shape("ess.gif")
@@ -381,6 +421,9 @@ if __name__ == '__main__':
 	engine.add_obj(logo)
 	
 	engine.add_obj(ship)
+	
+	sampleEnemy = Enemy()
+	engine.add_obj(sampleEnemy)
 	
 	engine.register_collision(Sun, Fusee, collision_cb_SL)
 	engine.register_collision(Fusee, Sun, collision_cb_LS)
