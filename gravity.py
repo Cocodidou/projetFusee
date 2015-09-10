@@ -18,8 +18,8 @@ basesize = 10  # base ship unit
 sundiam = 150  # sun diameter
 wlength = 5000  # ground length
 
-rocket_power = 0.3  # how much acceleration should the rockets give the ship
-gravity_coef = 0.03
+rocket_power = 1  # how much acceleration should the rockets give the ship
+gravity_coef = 0.06
 slowdown = 0.99
 fuel_consumption = 0.1
 
@@ -79,7 +79,7 @@ class Enemy(engine.GameObject):
         self.yspeed = math.cos(3.1415926535 * (self.head - 90) / 180)  \
             * rocket_power
 
-        if random.randint(0, 100) >= 99:
+        if random.randint(0, 1000) >= 992:
             shoot(self)
 
     xspeed = 0
@@ -238,9 +238,9 @@ def keyboard_cb(key):
     elif key == 'Escape':
         engine.exit_engine()
     elif key == 'Right':
-        ship.head -= 5
+        ship.head -= 8
     elif key == 'Left':
-        ship.head += 5
+        ship.head += 8
     elif key == "space":
         shoot(ship)
 
@@ -544,7 +544,7 @@ if __name__ == '__main__':
     engine.add_obj(ship)
 
     # create a random number of enemies located at random places
-    nb_enemies = random.randint(10, 20)
+    nb_enemies = random.randint(5, 10)
     for i in range(nb_enemies):
         en = Enemy()
         en.x0 = random.randint(-wlength/2, wlength/2)

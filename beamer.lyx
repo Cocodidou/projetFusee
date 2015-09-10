@@ -410,25 +410,6 @@ Subject: a lunar lander game
 I was given the game engine
 \end_layout
 
-\end_deeper
-\begin_layout Section
-Programming techniques involved
-\end_layout
-
-\begin_layout Frame
-\begin_inset Argument 4
-status open
-
-\begin_layout Plain Layout
-Game initialization
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_deeper
 \begin_layout Block
 \begin_inset Argument 2
 status open
@@ -467,8 +448,8 @@ compound
 
 \end_deeper
 \end_deeper
-\begin_layout Separator
-
+\begin_layout Section
+Algorithmic issues
 \end_layout
 
 \begin_layout Subsection
@@ -489,12 +470,29 @@ Terrain Generation
 \end_layout
 
 \begin_deeper
-\begin_layout Itemize
-Divided into 
-\begin_inset Formula $n$
+\begin_layout ColumnsCenterAligned
+
+\end_layout
+
+\begin_deeper
+\begin_layout Column
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+.5
+\backslash
+linewidth
+\end_layout
+
 \end_inset
 
- equal parts
+
+\end_layout
+
+\begin_layout Itemize
+Initial idea: random slopes
 \end_layout
 
 \begin_layout Itemize
@@ -502,7 +500,11 @@ Fractal generation of mountains
 \end_layout
 
 \begin_layout Itemize
-Flat spot enforced
+Divided into 
+\begin_inset Formula $n$
+\end_inset
+
+ equal parts, flat spot enforced
 \end_layout
 
 \begin_layout Block
@@ -531,12 +533,8 @@ Existing segment:
 \begin_inset Formula $x_{m}=\left(x_{0}+x_{1}\right)/2$
 \end_inset
 
- is assigned:
-\begin_inset Formula 
-\[
-y_{m}=y\left(x_{m}\right)+\textrm{rand}\left(r\right)
-\]
-
+ is assigned: 
+\begin_inset Formula $y_{m}=y\left(x_{m}\right)+\textrm{rand}\left(r\right)$
 \end_inset
 
 
@@ -550,22 +548,16 @@ Recursive call with
  for the two new segments
 \end_layout
 
-\begin_layout Itemize
-Bounded terminal recursion
-\end_layout
-
 \end_deeper
-\end_deeper
-\begin_layout Subsection
-In-game features
-\end_layout
-
-\begin_layout Frame
-\begin_inset Argument 4
+\begin_layout Column
+\begin_inset ERT
 status open
 
 \begin_layout Plain Layout
-Event handling
+
+.5
+\backslash
+linewidth
 \end_layout
 
 \end_inset
@@ -573,26 +565,20 @@ Event handling
 
 \end_layout
 
-\begin_deeper
-\begin_layout Itemize
-Event handler functions registered at the engine level
-\end_layout
+\begin_layout Standard
+\begin_inset Graphics
+	filename terrain1.png
+	width 100col%
 
-\begin_layout Itemize
-Keyboard events: single key at a time
-\end_layout
+\end_inset
 
-\begin_layout Itemize
-Workaround to keep the engine powered while rotating
-\end_layout
 
-\begin_layout Itemize
-Collision handling: class-specific functions
 \end_layout
 
 \end_deeper
-\begin_layout Separator
-
+\end_deeper
+\begin_layout Subsection
+Collisions
 \end_layout
 
 \begin_layout Frame
@@ -630,18 +616,6 @@ d=\frac{\left|ax_{L}+by_{L}+c\right|}{\sqrt{a^{2}+b^{2}}}\leqslant2B
 \end_layout
 
 \begin_layout Itemize
-Bullets, enemies, sun: bounding circles
-\begin_inset Formula 
-\[
-d\left(P,L\right)\leqslant2B+r\left(P\right)
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Itemize
 Workaround for high slopes: 
 \begin_inset Formula $d$
 \end_inset
@@ -650,6 +624,18 @@ Workaround for high slopes:
 \begin_inset Formula 
 \[
 y_{L}<\max\left[y_{0},y_{1}\right]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Bullets, enemies, sun: bounding circles
+\begin_inset Formula 
+\[
+d\left(P,L\right)\leqslant2B+r\left(P\right)
 \]
 
 \end_inset
