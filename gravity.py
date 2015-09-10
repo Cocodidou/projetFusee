@@ -217,6 +217,7 @@ def shoot(sender):
     engine.add_obj(bullet)
 
 
+# Handle keyboard events.
 def keyboard_cb(key):
     global ship  # assuming it's unique (and this is the case!)
     global spd  # the accelerometer

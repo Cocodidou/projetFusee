@@ -10,13 +10,14 @@
 \setbeamercovered{transparent}
 % or whatever (possibly just delete it)
 \end_preamble
+\options mathserif
 \use_default_options false
 \maintain_unincluded_children false
 \language american
 \language_package default
 \inputencoding auto
 \fontencoding global
-\font_roman times
+\font_roman default
 \font_sans default
 \font_typewriter default
 \font_math auto
@@ -295,10 +296,6 @@ status open
 
 \end_layout
 
-\begin_layout Standard
-
-\end_layout
-
 \begin_layout Frame
 \begin_inset Argument 4
 status open
@@ -405,6 +402,14 @@ Have the prettiest possible code
 Use optimized algorithmic techniques
 \end_layout
 
+\begin_layout Itemize
+Subject: a lunar lander game
+\end_layout
+
+\begin_layout Itemize
+I was given the game engine
+\end_layout
+
 \end_deeper
 \begin_layout Section
 Programming techniques involved
@@ -415,7 +420,21 @@ Programming techniques involved
 status open
 
 \begin_layout Plain Layout
-Python-specific techniques
+Game initialization
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Block
+\begin_inset Argument 2
+status open
+
+\begin_layout Plain Layout
+Creation of Turtle objects
 \end_layout
 
 \end_inset
@@ -425,11 +444,283 @@ Python-specific techniques
 
 \begin_deeper
 \begin_layout Itemize
-Python requires a clean indentation!
+Shape registration
 \end_layout
 
 \begin_layout Itemize
+Instantiation of classes
+\end_layout
 
+\begin_layout Standard
+
+\family typewriter
+super().__init__(-WIDTH/2+20,130,0,0,'fuel','green')
+\end_layout
+
+\begin_layout Itemize
+Terrain, ship generation via 
+\family typewriter
+compound
+\family default
+ objects
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Separator
+
+\end_layout
+
+\begin_layout Subsection
+Terrain
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Terrain Generation
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Divided into 
+\begin_inset Formula $n$
+\end_inset
+
+ equal parts
+\end_layout
+
+\begin_layout Itemize
+Fractal generation of mountains
+\end_layout
+
+\begin_layout Itemize
+Flat spot enforced
+\end_layout
+
+\begin_layout Block
+\begin_inset Argument 2
+status open
+
+\begin_layout Plain Layout
+Fractal algorithm
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Existing segment: 
+\begin_inset Formula $\left[\left(x_{0},y_{0}\right);\left(x_{1},y_{1}\right)\right]$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $x_{m}=\left(x_{0}+x_{1}\right)/2$
+\end_inset
+
+ is assigned:
+\begin_inset Formula 
+\[
+y_{m}=y\left(x_{m}\right)+\textrm{rand}\left(r\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Recursive call with 
+\begin_inset Formula $r/2$
+\end_inset
+
+ for the two new segments
+\end_layout
+
+\begin_layout Itemize
+Bounded terminal recursion
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Subsection
+In-game features
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Event handling
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Event handler functions registered at the engine level
+\end_layout
+
+\begin_layout Itemize
+Keyboard events: single key at a time
+\end_layout
+
+\begin_layout Itemize
+Workaround to keep the engine powered while rotating
+\end_layout
+
+\begin_layout Itemize
+Collision handling: class-specific functions
+\end_layout
+
+\end_deeper
+\begin_layout Separator
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Collision detection
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Lander radius: 
+\begin_inset Formula $2B$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Lander - ground: point-to-line distance
+\begin_inset Formula 
+\[
+d=\frac{\left|ax_{L}+by_{L}+c\right|}{\sqrt{a^{2}+b^{2}}}\leqslant2B
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Bullets, enemies, sun: bounding circles
+\begin_inset Formula 
+\[
+d\left(P,L\right)\leqslant2B+r\left(P\right)
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Workaround for high slopes: 
+\begin_inset Formula $d$
+\end_inset
+
+ only calculated if 
+\begin_inset Formula 
+\[
+y_{L}<\max\left[y_{0},y_{1}\right]
+\]
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Separator
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Scrolling
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Scrolling when 
+\begin_inset Formula $\left|x_{L}\right|\geqslant\frac{W}{6}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+Bullets and enemies scroll along
+\end_layout
+
+\begin_layout Itemize
+On the two borders: switching between primary/secondary grounds
+\end_layout
+
+\end_deeper
+\begin_layout Section
+Possible improvements
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+More things to do
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Rewrite the collision detection mechanism to pixel level
+\end_layout
+
+\begin_layout Itemize
+Implement levels (increasing difficulty?)
+\end_layout
+
+\begin_layout Itemize
+Add fuel loading stations (with wider levels)
 \end_layout
 
 \end_deeper
