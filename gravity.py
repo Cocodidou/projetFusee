@@ -33,6 +33,7 @@ class GreenBarFuel(engine.GameObject):
     def heading(self):
         return 180
 
+
 class SpeedBar(engine.GameObject):
     def __init__(self):
         super().__init__(WIDTH/2-20, 130, 0, 0, 'speed', 'red')
@@ -40,13 +41,16 @@ class SpeedBar(engine.GameObject):
     def heading(self):
         return 180
 
+
 class LogoEssence(engine.GameObject):
     def __init__(self):
         super().__init__(-WIDTH/2+40, 160, 0, 0, 'ess.gif', 'green')
 
+
 class LogoVitesse(engine.GameObject):
     def __init__(self):
         super().__init__(WIDTH/2-50, 160, 0, 0, 'speed.gif', 'green')
+
 
 class Enemy(engine.GameObject):
     def __init__(self):
@@ -56,7 +60,7 @@ class Enemy(engine.GameObject):
         return self.head
 
     def isoob(self):
-        return False  # enemies should never be destroyed unless hit by a bullet
+        return False  # enemies should never be destroyed by oob
 
     def move(self):
         self.y0 += self.yspeed
@@ -70,13 +74,12 @@ class Enemy(engine.GameObject):
         self.head = 180 / 3.1415926535 * 2 * \
             math.atan((self.y - ship.y) / ((self.x - ship.x) + re)) + 90
 
-
-        self.xspeed = math.sin(-3.1415926535 * (self.head - 90)/ 180) \
+        self.xspeed = math.sin(-3.1415926535 * (self.head - 90) / 180) \
             * rocket_power
-        self.yspeed = math.cos(3.1415926535 * (self.head - 90)/ 180)  \
+        self.yspeed = math.cos(3.1415926535 * (self.head - 90) / 180)  \
             * rocket_power
 
-        if random.randint(0,100) >= 99:
+        if random.randint(0, 100) >= 99:
             shoot(self)
 
     xspeed = 0
@@ -85,17 +88,21 @@ class Enemy(engine.GameObject):
     y0 = 0
     head = 90
 
+
 class Bullet(engine.GameObject):
     def __init__(self, xs, ys, x, y, hd):
         self.xspeed = xs
         self.yspeed = ys
         self.head = hd
         super().__init__(x, y, 0, 0, 'bullet', 'red')
+
     def heading(self):
         return self.head
+
     def move(self):
         self.x += self.xspeed
         self.y += self.yspeed
+
     head = 0
     xspeed = 0
     yspeed = 0
@@ -104,26 +111,32 @@ class Bullet(engine.GameObject):
 class Ground(engine.GameObject):
     def __init__(self):
         super().__init__(0, -HEIGHT/2, 0, 0, 'ground', '#8B4513')
+
     def heading(self):
         return 90
+
     def isoob(self):
         return False
 
-    ground = () # this will be defined as lvl
+    ground = ()  # this will be defined as lvl
 
     # There are two grounds, which are alternatively used
     # while scrolling. This variable helps distinguishing them.
     gndIdentifier = 0
 
+
 class Sun(engine.GameObject):
     def __init__(self):
         super().__init__(0, HEIGHT/2, 0, 0, 'sun', 'yellow')
 
+
 class Fusee(engine.GameObject):
     def __init__(self):
         super().__init__(0, 0, 0, 0, 'lander', 'black')
+
     def heading(self):
         return self.head
+
     def move(self):
         global gnd
 
@@ -135,11 +148,11 @@ class Fusee(engine.GameObject):
 
         if abs(self.x) <= (1/6) * WIDTH \
             or (self.x >= (1/6) * WIDTH and self.xspeed < 0) \
-            or (self.x <= -(1/6) * WIDTH and self.xspeed > 0):
-            self.y += self.yspeed 
+                or (self.x <= -(1/6) * WIDTH and self.xspeed > 0):
+            self.y += self.yspeed
             self.x += self.xspeed
         else:
-            gnd.x -= self.xspeed # scroll the ground instead of the ship
+            gnd.x -= self.xspeed  # scroll the ground instead of the ship
             if gnd.x >= -1 * WIDTH / 2 or gnd.x <= -wlength + WIDTH / 2:
                 # we are in a sensitive zone; two grounds are being shown
                 if gnd.x >= -1 * WIDTH / 2:
@@ -164,8 +177,7 @@ class Fusee(engine.GameObject):
         self.xspeed = slowdown * self.xspeed
         self.yspeed = slowdown * self.yspeed - gravity_coef
 
-
-        if self.mode == 0: # in case it hasn't got done before...
+        if self.mode == 0:  # in case it hasn't got done before...
             self.shape = "lander"
 
         if self.fuel_level > 0 and self.mode == 1:
@@ -178,7 +190,7 @@ class Fusee(engine.GameObject):
                 self.mode = 0
 
     def isoob(self):
-        return False # the ship shouldn't get destroyed
+        return False  # the ship shouldn't get destroyed
 
     def getFuelLevel(self):
         return fuel_level
@@ -189,6 +201,7 @@ class Fusee(engine.GameObject):
     head = 0
     mode = 0
     acceleration = 0
+
 
 # Shoots a bullet from the sender, with its heading and speed plus a constant.
 def shoot(sender):
@@ -203,9 +216,10 @@ def shoot(sender):
     bullet = Bullet(bxs, bys, bx, by, bh)
     engine.add_obj(bullet)
 
+
 def keyboard_cb(key):
-    global ship # assuming it's unique (and this is the case!)
-    global spd # the accelerometer
+    global ship  # assuming it's unique (and this is the case!)
+    global spd  # the accelerometer
     if key == 'q' and ship.fuel_level > 0:
         ship.mode = 1
         ship.acceleration += 0.05
@@ -231,6 +245,7 @@ def keyboard_cb(key):
 
 # Graphical functions.
 
+
 # Displays a message on screen.
 def banner(s):
     turtle.home()
@@ -238,13 +253,14 @@ def banner(s):
     turtle.write(s, True, align='center', font=('Monospace', 48, 'italic'))
     time.sleep(3)
 
+
 # Registers the ship.
 def reg_ship():
     global basesize
     B = basesize
 
     ship = turtle.Shape("compound")
-    mesh = ((1*B,0), (2*B, 2*B), (-2*B,0), (2*B, -2*B), (1*B,0) ) 
+    mesh = ((1*B, 0), (2*B, 2*B), (-2*B, 0), (2*B, -2*B), (1*B, 0))
     ship.addcomponent(mesh, "#555555", "#555555")
 
     redship = turtle.Shape("compound")
@@ -256,102 +272,117 @@ def reg_ship():
     turtle.register_shape('lander', ship)
     turtle.register_shape('powered_lander', redship)
 
+
 # Registers the enemy.
 def reg_enemy():
     global basesize
     B = 2*basesize
     enemyship = turtle.Shape("compound")
-    enemy_mesh = ((0, -1*B), (1*B, -0.33*B), (1*B, 0.33*B), (0, 1*B), (-1*B, 0))
+    enemy_mesh = ((0, -1*B), (1*B, -0.33*B), (1*B, 0.33*B),
+                  (0, 1*B), (-1*B, 0))
     left_antenna = ((-0.33*B, -0.66*B), (-B, -B), (-0.66*B, -0.33*B))
-    right_antenna = ((-0.33*B, 0.66*B),(-B, B),(-0.66*B, 0.33*B))
+    right_antenna = ((-0.33*B, 0.66*B), (-B, B), (-0.66*B, 0.33*B))
 
-    enemyship.addcomponent(enemy_mesh,"red","green")
-    enemyship.addcomponent(left_antenna,"red","green")
-    enemyship.addcomponent(right_antenna,"red","green")
+    enemyship.addcomponent(enemy_mesh, "red", "green")
+    enemyship.addcomponent(left_antenna, "red", "green")
+    enemyship.addcomponent(right_antenna, "red", "green")
     turtle.register_shape("enemy", enemyship)
+
 
 # Registers the bullet.
 def reg_bullet():
     turtle.home()
-    turtle.setpos(0,-5)
+    turtle.setpos(0, -5)
     turtle.begin_poly()
     turtle.circle(5, None, None)
     turtle.end_poly()
     circ = turtle.get_poly()
-    turtle.register_shape('bullet',circ)
+    turtle.register_shape('bullet', circ)
+
 
 # Registers the sun.
 def reg_sun():
     global sundiam
     turtle.home()
-    turtle.setpos(0,-sundiam/2)
+    turtle.setpos(0, -sundiam / 2)
     turtle.begin_poly()
     turtle.circle(sundiam/2, None, None)
     turtle.end_poly()
     circ = turtle.get_poly()
-    turtle.register_shape('sun',circ)
+    turtle.register_shape('sun', circ)
+
 
 # Registers the ground, once created.
 def reg_ground():
-    s = turtle.Shape("compound") 
+    s = turtle.Shape("compound")
     s.addcomponent(lvl, "#8B4513", "#8B4513")
     turtle.register_shape('ground', s)
+
 
 # Registers the fuel bar, with the given fuel level.
 def reg_fuel_bar(flevel):
     s = turtle.Shape("compound")
-    rect = ((flevel, 0), (flevel, 10), (0,10), (0,0))
+    rect = ((flevel, 0), (flevel, 10), (0, 10), (0, 0))
     s.addcomponent(rect, "#008000", "#008000")
-    turtle.register_shape('fuel',s)
+    turtle.register_shape('fuel', s)
+
 
 # Registers the acelerometer bar, with the given acceleration.
 def reg_speed_bar(level):
     s = turtle.Shape("compound")
-    rect = ((level, 0), (level, 10), (0,10), (0,0))
+    rect = ((level, 0), (level, 10), (0, 10), (0, 0))
     s.addcomponent(rect, "#FF3000", "#FF3000")
-    turtle.register_shape('speed',s)
+    turtle.register_shape('speed', s)
+
 
 # Handle collisions between the ship and the sun
 def collision_cb_SL(sun, lander):
-    if math.sqrt( (lander.x - sun.x) ** 2 + (lander.y - sun.y) ** 2 ) \
-        <= sundiam/2 + 2*basesize :
+    if math.sqrt((lander.x - sun.x) ** 2 + (lander.y - sun.y) ** 2) \
+            <= sundiam/2 + 2 * basesize:
         banner("Sunned!")
         engine.exit_engine()
+
 
 def collision_cb_LS(lander, sun):
     collision_cb_SL(sun, lander)
 
+
 # Handle collisions between the ship and enemies
 def collision_enemy(en, lander):
-    if math.sqrt( (lander.x - en.x) ** 2 + (lander.y - en.y) ** 2 ) \
-        <= 4 * basesize:
+    if math.sqrt((lander.x - en.x) ** 2 + (lander.y - en.y) ** 2) \
+            <= 4 * basesize:
         banner("Crash against enemy")
         engine.exit_engine()
 
+
 # Handle collisions between ennemies and bullets
 def collision_en_bl(en, bl):
-    if math.sqrt( (bl.x - en.x) ** 2 + (bl.y - en.y) ** 2 ) <= 4 * basesize:
+    if math.sqrt((bl.x - en.x) ** 2 + (bl.y - en.y) ** 2) <= 4 * basesize:
         engine.del_obj(en)
         engine.del_obj(bl)
+
 
 def collision_bl_en(bl, en):
     collision_en_bl(en, bl)
 
+
 # Handle collisions between the ship and bullets
 def collision_sh_bl(lander, bl):
-    if math.sqrt( (bl.x - lander.x) ** 2 + (lander.y - bl.y) ** 2 ) \
-        <= 2 * basesize:
+    if math.sqrt((bl.x - lander.x) ** 2 + (lander.y - bl.y) ** 2) \
+            <= 2 * basesize:
         banner("Killed by bullet")
         engine.exit_engine()
 
+
 def collision_bl_sh(bl, lander):
     collision_sh_bl(lander, bl)
+
 
 # Handle collisions between thhe ship and the ground
 def collision_ship_ground(lander, terrain):
     step = 0
     orig = 0
-    y = lander.y + HEIGHT /2
+    y = lander.y + HEIGHT / 2
     x = lander.x - terrain.x
     for i in range(len(terrain.ground)-1):
         x0 = terrain.ground[i][0]
@@ -365,57 +396,61 @@ def collision_ship_ground(lander, terrain):
             c = (x0 - x1) * y0 + (y1 - y0) * x0
             d = abs(a * x + b * y + c) / math.sqrt(a ** 2 + b ** 2)
             if (d <= basesize and a != 0):
-                banner("Crash!") # don't be mean... sorry for the victims
+                banner("Crash!")
                 engine.exit_engine()
             elif (d <= 2*basesize and abs(a) <= 1 and abs(lander.head) >= 15):
                 banner("Crash on one reactor!")
                 engine.exit_engine()
-            elif (d <= 2*basesize and abs(a) <= 1 and \
-                math.sqrt(lander.xspeed ** 2 + lander.yspeed ** 2) >= 2 ):
+            elif (d <= 2*basesize and abs(a) <= 1 and
+                    math.sqrt(lander.xspeed ** 2 + lander.yspeed ** 2) >= 2):
                 banner("Fast crash...")
                 engine.exit_engine()
             elif (d <= 2*basesize and abs(a) <= 1 and abs(lander.head) < 15):
                 banner("Landed!")
                 engine.exit_engine()
 
+
 def collision_ground_ship(gnd, ship):
     collision_ship_ground(ship, gnd)
+
 
 # Fractal creation of the ground
 def recursiveFractalBuild(x0, x1, y0, y1, w, rr):
     if w == 0:
-        return [( (x0 + x1) / 2., (y0 + y1) / 2. + random.randint(0,rr))]
+        return [((x0 + x1) / 2., (y0 + y1) / 2. + random.randint(0, rr))]
     else:
-        ymid = (y0 + y1) / 2 + random.randint(0,rr)
-        LL = recursiveFractalBuild(x0, (x0 + x1) /2., y0, ymid, \
-            w-1, int(rr / 1.5))
-        RL = recursiveFractalBuild((x0 + x1) /2., x1, ymid, y1, \
-            w-1, int(rr / 1.5))
+        ymid = (y0 + y1) / 2 + random.randint(0, rr)
+        LL = recursiveFractalBuild(x0, (x0 + x1) / 2., y0, ymid,
+                                   w-1, int(rr / 1.5))
+        RL = recursiveFractalBuild((x0 + x1) / 2., x1, ymid, y1,
+                                   w-1, int(rr / 1.5))
         L = []
         for i in LL:
             L.append(i)
-        L.append(( (x0 + x1) / 2., ymid ))
+        L.append(((x0 + x1) / 2., ymid))
         for i in RL:
             L.append(i)
         return L
 
+
 # Creates a random terrain with a flat spot (the one to land on)
 def build_random_map(width):
-    zero_pos = random.randint(0, width-100) # Where to put the flat spot.
+    zero_pos = random.randint(0, width-100)  # Where to put the flat spot.
 
-    n = 6 # divide the total width in n equal parts
-    depth = 5 # recursion depth for fractal calculation
-    interv = 90 # maximal amplitude, divided by 2 at each recursion round
+    n = 6  # divide the total width in n equal parts
+    depth = 5  # recursion depth for fractal calculation
+    interv = 90  # maximal amplitude, divided by 2 at each recursion round
 
     mountains = []
-    yprev = random.randint(20,120)
-    ydeb = yprev # continuity index for scrolling
+    yprev = random.randint(20, 120)
+    ydeb = yprev  # continuity index for scrolling
 
     # the ground is created by applying the fractal procedure to n equal parts
     for i in range(n):
-        y0 = random.randint(20,120)
-        mnt = recursiveFractalBuild(int(i * width / n), \
-            int((i + 1) * width / n), yprev, y0, depth, interv)
+        y0 = random.randint(20, 120)
+        mnt = recursiveFractalBuild(int(i * width / n),
+                                    int((i + 1) * width / n),
+                                    yprev, y0, depth, interv)
 
         mnt.append((int(i * width / n), yprev))
         mnt.append((int((i + 1) * width / n), y0))
@@ -434,14 +469,15 @@ def build_random_map(width):
             closest_point = i
             closest_dist = abs(i[0] - zero_pos)
 
-    ret = [ x if x[0] > zero_pos + 100 or x[0] < zero_pos \
-        else (x[0], closest_point[1]) for x in mnt_sort ] 
+    ret = [x if x[0] > zero_pos + 100 or x[0] < zero_pos
+           else (x[0], closest_point[1]) for x in mnt_sort]
     # make the flat spot just like a bulldozer would do!!
 
     ret.append((width, 0))
     ret.append((0, 0))
 
     return tuple(ret)
+
 
 if __name__ == '__main__':
     engine.init_screen(WIDTH, HEIGHT)
@@ -507,7 +543,7 @@ if __name__ == '__main__':
     engine.add_obj(ship)
 
     # create a random number of enemies located at random places
-    nb_enemies = random.randint(10,20)
+    nb_enemies = random.randint(10, 20)
     for i in range(nb_enemies):
         en = Enemy()
         en.x0 = random.randint(-wlength/2, wlength/2)
@@ -523,10 +559,9 @@ if __name__ == '__main__':
 
     engine.register_collision(Fusee, Enemy, collision_enemy)
 
-    engine.register_collision(Enemy,Bullet,collision_en_bl)
+    engine.register_collision(Enemy, Bullet, collision_en_bl)
     engine.register_collision(Fusee, Bullet, collision_sh_bl)
     engine.register_collision(Bullet, Fusee, collision_bl_sh)
 
     # start the game!
     engine.engine()
-
