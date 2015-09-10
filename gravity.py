@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # coding: UTF-8
-# basic moving ship
+# ship landing game
 
 import turtle
 import engine
@@ -14,16 +14,16 @@ HEIGHT = 768
 
 ### GLOBALS ###
 
-basesize = 10 # unité de base du vaisseau
-sundiam = 150 # diamètre du soleil
-wlength = 5000 # sol
+basesize = 10 # base ship unit
+sundiam = 150 # sun diameter
+wlength = 5000 # ground length
 
-rocket_power = 0.3 # pêche des moteurs
-gravity_coef = 0.03 # attraction lunaire
-slowdown = 0.99 # frottement
-fuel_consumption = 0.1  # consommation d'essence
+rocket_power = 0.3
+gravity_coef = 0.03 
+slowdown = 0.99 
+fuel_consumption = 0.1 
 
-lvl = () # le level est généré aléatoirement
+lvl = () # level is randomly generated, but is still global (dirty!)
 
 class GreenBarFuel(engine.GameObject):
 	def __init__(self):
@@ -62,7 +62,7 @@ class Enemy(engine.GameObject):
 		self.x = (gnd.x + wlength/2) + self.x0
 		self.y = self.y0
 		
-		# Follow me...
+		# All the enemies have to converge towards the player
 		if self.y != ship.y:
 			re = math.sqrt((self.y - ship.y) ** 2 + (self.x - ship.x) ** 2)
 			self.head = 180 / 3.1415926535 * 2 * \
@@ -74,7 +74,7 @@ class Enemy(engine.GameObject):
 		self.yspeed = math.cos(3.1415926535 * (self.head - 90)/ 180)  \
 		* rocket_power
 		
-		if random.randint(0,100) >= 95:
+		if random.randint(0,100) >= 99:
 			shoot(self)
 	
 	xspeed = 0
@@ -106,15 +106,16 @@ class Ground(engine.GameObject):
 		return 90
 	def isoob(self):
 		return False
-	#ground = lvl
-	ground = ()
-	gndIdentifier = 0
+	
+	ground = () # this will be defined as lvl
+	# There are two grounds, which are alternatively used
+	# while scrolling. This variable helps distinguishing them.
+	gndIdentifier = 0 
 	
 
 class Sun(engine.GameObject):
 	def __init__(self):
 		super().__init__(0, HEIGHT/2, 0, 0, 'sun', 'yellow')
-		#super().__init__(0, 0, 0, 0, 'sun', 'yellow')
 
 class Fusee(engine.GameObject):
 	def __init__(self):
@@ -129,19 +130,16 @@ class Fusee(engine.GameObject):
 			* rocket_power * self.gazpower
 			self.yspeed += math.cos(3.1415926535 * self.head / 180)  \
 			* rocket_power * self.gazpower
-
-		# If the ship is in the last third of the screen (whichever side it is),
-		# then scroll the ground!
+		
 		if abs(self.x) <= (1/6) * WIDTH \
 		or (self.x >= (1/6) * WIDTH and self.xspeed < 0) \
 		or (self.x <= -(1/6) * WIDTH and self.xspeed > 0):
-			self.y += self.yspeed
+			self.y += self.yspeed 
 			self.x += self.xspeed
 		else:
-			gnd.x -= self.xspeed
-
+			gnd.x -= self.xspeed # scroll the ground instead of the ship
 			if gnd.x >= -1 * WIDTH / 2 or gnd.x <= -wlength + WIDTH / 2:
-				# print(gnd.x)
+				# we are in a sensitive zone; two grounds are being shown
 				if gnd.x >= -1 * WIDTH / 2:
 					if gnd.gndIdentifier == 1:
 						gndbis.x = gnd.x - wlength
@@ -153,17 +151,18 @@ class Fusee(engine.GameObject):
 					else:
 						gndpr.x = gnd.x + wlength
 				if gnd.x >= 0 or gnd.x <= -wlength:
+					# it's now time to switch the primary ground (reference for x's)
 					if gnd.gndIdentifier == 1:
 						gnd = gndbis
 					else:
-						gnd = gndpr		
+						gnd = gndpr
 			self.y += self.yspeed
 			
 		self.xspeed = slowdown * self.xspeed
 		self.yspeed = slowdown * self.yspeed - gravity_coef
 
 		
-		if self.mode == 0:
+		if self.mode == 0: # in case it hasn't got done before...
 			self.shape = "fusee"
 		
 		if self.fuelLevel > 0 and self.mode == 1:
@@ -185,8 +184,6 @@ class Fusee(engine.GameObject):
 	
 	def getFuelLevel(self):
 		return fuelLevel
-
-
 	
 	xspeed = 0
 	yspeed = 0
@@ -206,11 +203,7 @@ def shoot(sender):
 	engine.add_obj(bullet)
 
 def keyboard_cb(key):
-	# Problem on some machines: if a key stays pressed, then
-	# there is a delay between the first key event being triggered
-	# and the next ones (this is the damn repeat delay)
-	# How to get around this issue?
-	global ship
+	global ship # assuming it's unique (and this is the case!)
 	if key == 'q' and ship.fuelLevel > 0:
 		ship.mode = 1
 		ship.gazpower += 0.05
@@ -226,7 +219,6 @@ def keyboard_cb(key):
 			ship.mode = 0
 			ship.shape = "fusee"
 	elif key == 'Escape':
-		#print("Au revoir...")
 		engine.exit_engine()
 	elif key == 'Right':
 		ship.head -= 5
@@ -247,7 +239,7 @@ def drawship():
 	reaction = ((1.5*B, 1*B), (2*B, 0), (1.5*B, -1*B), (1*B, 0))
 	
 	redship.addcomponent(mesh, "#555555", "#555555")
-	redship.addcomponent(reaction, "yellow", "yellow") # réacteur, (c) Antonin
+	redship.addcomponent(reaction, "yellow", "yellow")
 	
 	turtle.register_shape('fusee', ship)
 	turtle.register_shape('fusee reac', redship)
@@ -256,7 +248,6 @@ def drawenemy():
 	global basesize
 	B = 2*basesize
 	enemyship = turtle.Shape("compound")
-	#enemy_mesh = ((-1*B,0),(-0.33*B,-1*B),(0.33*B,-1*B),(1*B,0),(0,1*B))
 	enemy_mesh = ((0, -1*B), (1*B, -0.33*B), (1*B, 0.33*B), (0, 1*B), (-1*B, 0))
 	left_antenna = ((-0.33*B,-0.66*B),(-B,-B),(-0.66*B,-0.33*B))
 	right_antenna = ((-0.33*B,0.66*B),(-B,B),(-0.66*B,0.33*B))
@@ -280,8 +271,6 @@ def banner(s):
 	turtle.color('white')
 	turtle.write(s, True, align='center', font=('Arial', 48, 'italic'))
 	time.sleep(3)
-	#turtle.undo()
-
 
 def drawsun():
 	global sundiam
@@ -352,15 +341,12 @@ def genericGroundCollisionCall(ship, gnd):
 		y1 = gnd.ground[i+1][1]
 		if x0 <= x and x <= x1 and x1 != x0 and y - 2 * basesize < max(y1, y0):
 			# BAD HACK: there should be no test on y
-			# mathématiquement parlant
 			a = y0 - y1
 			b = x1 - x0
 			c = (x0 - x1) * y0 + (y1 - y0) * x0
 			d = abs(a * x + b * y + c) / math.sqrt(a ** 2 + b ** 2)
-			#print(d)
 			if (d <= basesize and a != 0):
-				#print(str(x0) + ":" + str(y0) + ";" + str(x1) + ":" + str(y1))
-				banner("Andreas Lubitz!")
+				banner("Crash!") # don't be mean... sorry for the victims
 				engine.exit_engine()
 			elif (d <= 2*basesize and abs(a) <= 1 and abs(ship.head) >= 15):
 				banner("Crash on one reactor!")
@@ -385,13 +371,13 @@ def recursiveFractalBuild(x0, x1, y0, y1, w, rr):
 		return [( (x0 + x1) / 2., (y0 + y1) / 2. + random.randint(0,rr))]
 	else:
 		ymid = (y0 + y1) / 2 + random.randint(0,rr)
-		LG = recursiveFractalBuild(x0, (x0 + x1) /2., y0, ymid, w-1, int(rr / 1.5))
-		LD = recursiveFractalBuild((x0 + x1) /2., x1, ymid, y1, w-1, int(rr / 1.5))
+		LL = recursiveFractalBuild(x0, (x0 + x1) /2., y0, ymid, w-1, int(rr / 1.5))
+		RL = recursiveFractalBuild((x0 + x1) /2., x1, ymid, y1, w-1, int(rr / 1.5))
 		L = []
-		for i in LG:
+		for i in LL:
 			L.append(i)
 		L.append(( (x0 + x1) / 2., ymid ))
-		for i in LD:
+		for i in RL:
 			L.append(i)
 		return L
 
@@ -419,10 +405,6 @@ def build_random_map(width):
 			mountains.append(j)
 
 	mountains[len(mountains)-1] = (width, ydeb) # continuity for scrolling
-
-	#mountains = recursiveFractalBuild(0, width, y0, y1, 7, 120)
-	#mountains.append((0, y0))
-	#mountains.append((width, y1))
 	mnt_sort = sorted(mountains, key=lambda x: x[0])
 	
 	# find the closest spot
@@ -437,12 +419,8 @@ def build_random_map(width):
 	 else (x[0], closest_point[1]) for x in mnt_sort ] # just like a bulldozer!!
 	ret.append((width, 0))
 	ret.append((0, 0))
-	#mnt_sort.append((width, 0))
-	#mnt_sort.append((0,0))
 	
 	return tuple(ret)
-	#return tuple(mnt_sort)
-
 
 if __name__ == '__main__':
 	engine.init_screen(WIDTH, HEIGHT)
