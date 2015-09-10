@@ -269,7 +269,7 @@ def drawbullet():
 def banner(s):
 	turtle.home()
 	turtle.color('white')
-	turtle.write(s, True, align='center', font=('Arial', 48, 'italic'))
+	turtle.write(s, True, align='center', font=('Monospace', 48, 'italic'))
 	time.sleep(3)
 
 def drawsun():
