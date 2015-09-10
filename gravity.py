@@ -42,12 +42,12 @@ class SpeedBar(engine.GameObject):
         return 180
 
 
-class LogoEssence(engine.GameObject):
+class FuelLogo(engine.GameObject):
     def __init__(self):
         super().__init__(-WIDTH/2+40, 160, 0, 0, 'ess.gif', 'green')
 
 
-class LogoVitesse(engine.GameObject):
+class AccelerationLogo(engine.GameObject):
     def __init__(self):
         super().__init__(WIDTH/2-50, 160, 0, 0, 'speed.gif', 'green')
 
@@ -535,10 +535,10 @@ if __name__ == '__main__':
     engine.add_obj(spd)
 
     # display the gifs on screen
-    logo = LogoEssence()
-    vits = LogoVitesse()
+    logo = FuelLogo()
+    accl = AccelerationLogo()
     engine.add_obj(logo)
-    engine.add_obj(vits)
+    engine.add_obj(accl)
 
     engine.add_obj(ship)
 
