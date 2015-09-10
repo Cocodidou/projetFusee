@@ -194,7 +194,7 @@ class Fusee(engine.GameObject):
 
 def shoot(sender):
 	bh = sender.heading()
-	abs_spd = math.sqrt(sender.xspeed ** 2 + sender.yspeed ** 2) + 4
+	abs_spd = math.sqrt(sender.xspeed ** 2 + sender.yspeed ** 2) + 8
 	bxs = abs_spd * math.sin(-3.1415926535 * bh / 180)
 	bys = abs_spd * math.cos(-3.1415926535 * bh / 180)
 	bx = sender.x + 4 * basesize * math.sin(-3.1415926535 * sender.heading() / 180)
