@@ -415,7 +415,7 @@ I was given the game engine
 status open
 
 \begin_layout Plain Layout
-Creation of Turtle objects
+Creation of on-screen Turtle objects
 \end_layout
 
 \end_inset
@@ -424,6 +424,14 @@ Creation of Turtle objects
 \end_layout
 
 \begin_deeper
+\begin_layout Itemize
+Terrain, ship generation via 
+\family typewriter
+compound
+\family default
+ objects
+\end_layout
+
 \begin_layout Itemize
 Shape registration
 \end_layout
@@ -436,14 +444,6 @@ Instantiation of classes
 
 \family typewriter
 super().__init__(-WIDTH/2+20,130,0,0,'fuel','green')
-\end_layout
-
-\begin_layout Itemize
-Terrain, ship generation via 
-\family typewriter
-compound
-\family default
- objects
 \end_layout
 
 \end_deeper
@@ -604,7 +604,11 @@ Lander radius:
 \end_layout
 
 \begin_layout Itemize
-Lander - ground: point-to-line distance
+Lander - ground: point-to-line (
+\begin_inset Formula $ax+by+c=0$
+\end_inset
+
+) distance
 \begin_inset Formula 
 \[
 d=\frac{\left|ax_{L}+by_{L}+c\right|}{\sqrt{a^{2}+b^{2}}}\leqslant2B
@@ -644,8 +648,8 @@ d\left(P,L\right)\leqslant2B+r\left(P\right)
 \end_layout
 
 \end_deeper
-\begin_layout Separator
-
+\begin_layout Subsection
+Scrolling
 \end_layout
 
 \begin_layout Frame
@@ -678,6 +682,29 @@ Bullets and enemies scroll along
 On the two borders: switching between primary/secondary grounds
 \end_layout
 
+\begin_layout AlertBlock
+\begin_inset Argument 2
+status open
+
+\begin_layout Plain Layout
+Consequences of scrolling
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout AlertBlock
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Enemies disappear when changing grounds!
+\end_layout
+
+\end_deeper
 \end_deeper
 \begin_layout Section
 Possible improvements
@@ -707,6 +734,10 @@ Implement levels (increasing difficulty?)
 
 \begin_layout Itemize
 Add fuel loading stations (with wider levels)
+\end_layout
+
+\begin_layout Itemize
+Smart enemy shooting mechanism
 \end_layout
 
 \end_deeper
