@@ -9,6 +9,8 @@
 
 \setbeamercovered{transparent}
 % or whatever (possibly just delete it)
+
+\setbeamertemplate{navigation symbols}{}
 \end_preamble
 \options mathserif
 \use_default_options false
@@ -534,11 +536,11 @@ Existing segment:
 \end_layout
 
 \begin_layout Itemize
-\begin_inset Formula $x_{m}=\left(x_{0}+x_{1}\right)/2$
+\begin_inset Formula $x_{m}=\frac{\left(x_{0}+x_{1}\right)}{2}$
 \end_inset
 
  is assigned: 
-\begin_inset Formula $y_{m}=y\left(x_{m}\right)+\textrm{rand}\left(r\right)$
+\begin_inset Formula $y_{m}=y\left(x_{m}\right)+\textrm{rand}\left(-r;r\right)$
 \end_inset
 
 
@@ -549,7 +551,15 @@ Recursive call with
 \begin_inset Formula $r/2$
 \end_inset
 
- for the two new segments
+ for 
+\begin_inset Formula $\left[\left(x_{0},y_{0}\right);\left(x_{m},y_{m}\right)\right]$
+\end_inset
+
+ and 
+\begin_inset Formula $\left[\left(x_{m},y_{m}\right);\left(x_{1},y_{1}\right)\right]$
+\end_inset
+
+
 \end_layout
 
 \end_deeper
@@ -623,15 +633,28 @@ d=\frac{\left|ax_{L}+by_{L}+c\right|}{\sqrt{a^{2}+b^{2}}}\leqslant2B
 
 \end_layout
 
-\begin_layout Itemize
-Workaround for high slopes: 
+\begin_layout Block
+\begin_inset Argument 2
+status open
+
+\begin_layout Plain Layout
+Addressing the issue of high slopes
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Standard
 \begin_inset Formula $d$
 \end_inset
 
- only calculated if 
+ is only calculated if 
 \begin_inset Formula 
 \[
-y_{L}<\max\left[y_{0},y_{1}\right]
+x_{0}\leqslant x_{L}\leqslant x_{1}\text{ and }y_{L}\leqslant\max\left[y_{0},y_{1}\right]
 \]
 
 \end_inset
@@ -639,6 +662,7 @@ y_{L}<\max\left[y_{0},y_{1}\right]
 
 \end_layout
 
+\end_deeper
 \begin_layout Itemize
 Bullets, enemies, sun: bounding circles
 \begin_inset Formula 
@@ -691,7 +715,7 @@ On the two borders: switching between primary/secondary grounds
 status open
 
 \begin_layout Plain Layout
-Consequences of scrolling
+Consequence of scrolling
 \end_layout
 
 \end_inset
@@ -704,8 +728,8 @@ Consequences of scrolling
 \end_layout
 
 \begin_deeper
-\begin_layout Itemize
-Enemies disappear when changing grounds!
+\begin_layout Standard
+Enemies and bullets disappear when changing grounds!
 \end_layout
 
 \end_deeper
@@ -742,6 +766,29 @@ Add fuel loading stations (with wider levels)
 
 \begin_layout Itemize
 Smart enemy shooting mechanism
+\end_layout
+
+\end_deeper
+\begin_layout Separator
+
+\end_layout
+
+\begin_layout Frame
+\begin_inset Argument 4
+status open
+
+\begin_layout Plain Layout
+Screencast
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Show it...
 \end_layout
 
 \end_deeper
