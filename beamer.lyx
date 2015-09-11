@@ -500,11 +500,11 @@ Fractal generation of mountains
 \end_layout
 
 \begin_layout Itemize
-Divided into 
+Ground is divided into 
 \begin_inset Formula $n$
 \end_inset
 
- equal parts, flat spot enforced
+ equal parts
 \end_layout
 
 \begin_layout Block
@@ -524,6 +524,10 @@ Fractal algorithm
 \begin_layout Itemize
 Existing segment: 
 \begin_inset Formula $\left[\left(x_{0},y_{0}\right);\left(x_{1},y_{1}\right)\right]$
+\end_inset
+
+; 
+\begin_inset Formula $r\in\mathbf{R}^{+}$
 \end_inset
 
 
